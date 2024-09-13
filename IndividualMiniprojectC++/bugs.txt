@@ -16,5 +16,11 @@ Location: Course.cpp
 Issue 6: Incorrect logic in Course::isCourseFull() - need to check if capacity is less than or equal to enrollment
 Location: Course.cpp
 
-Issue 7: enrolledStudentCount is initialized to 500 instead of 0.
+Issue 7: Course::enrolledStudentCount is initialized to 500 instead of 0.
 Location: Course.cpp
+
+Issue 8: Department::getDepartmentChair() returns a string "departmentChair" instead of the actual member variable.
+Location: Department.cpp
+
+Issue 9: Department::dropPersonFromMajor() doesn't check if number of majors will go below 0
+Location: Department.cpp
