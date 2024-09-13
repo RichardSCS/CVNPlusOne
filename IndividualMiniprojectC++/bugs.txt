@@ -1,0 +1,20 @@
+Issue 1: Course::enrollStudent() doesn't check against the enrollment capacity and never returns true.
+Location: Course.cpp
+
+Issue 2: Course::dropStudent() doesn't check that enrollment doesn't go below zero and never returns true.
+Location: Course.cpp
+
+Issue 3: Course::getInstructorName() returns incorrect member variable
+Location: Course.cpp
+
+Issue 4: Course::getCourseTimeSlot() returns incorrect member variable
+Location: Course.cpp
+
+Issue 5: Add Course::getEnrolledStudentCount() to Course class
+Location: Course.cpp
+
+Issue 6: Incorrect logic in Course::isCourseFull() - need to check if capacity is less than or equal to enrollment
+Location: Course.cpp
+
+Issue 7: enrolledStudentCount is initialized to 500 instead of 0.
+Location: Course.cpp

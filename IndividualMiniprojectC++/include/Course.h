@@ -28,6 +28,7 @@ class Course {
         void reassignLocation(const std::string &newLocation);
         void reassignTime(const std::string &newTime);
         void setEnrolledStudentCount(int count);
+        int getEnrolledStudentCount();
         void serialize(std::ostream& out) const;
         void deserialize(std::istream& in);
 };
