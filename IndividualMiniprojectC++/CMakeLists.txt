@@ -45,9 +45,12 @@ add_executable(IndividualMiniprojectTests
   test/sample.cpp
   test/CourseUnitTests.cpp
   test/DepartmentUnitTests.cpp
+  test/MyFileDatabaseUnitTests.cpp
+  test/MyAppUnitTests.cpp
   src/Course.cpp
   src/Department.cpp
   src/MyFileDatabase.cpp
+  src/MyApp.cpp
 )
 
 target_include_directories(IndividualMiniprojectTests PRIVATE 
@@ -80,6 +83,8 @@ if (CPPLINT)
         test/sample.cpp
         test/CourseUnitTests.cpp
         test/DepartmentUnitTests.cpp
+        test/MyFileDatabaseUnitTests.cpp
+        test/MyAppUnitTests.cpp
     )
 
     # Custom target to run cpplint
