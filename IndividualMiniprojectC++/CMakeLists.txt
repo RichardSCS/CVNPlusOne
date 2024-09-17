@@ -5,6 +5,7 @@ project(IndividualMiniproject)
 set(INCLUDE_PATHS external_libraries/boost_1_86_0 external_libraries/Crow-1.2.0-Darwin/include)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MODULE_PATH build/CMakeModules)
 
 # Main project executable
 add_executable(IndividualMiniproject 
@@ -39,6 +40,9 @@ target_link_libraries(IndividualMiniproject PRIVATE
 )
 
 enable_testing()
+
+include(CodeCoverage.cmake)
+append_coverage_compiler_flags()
 
 # Test executable
 add_executable(IndividualMiniprojectTests
