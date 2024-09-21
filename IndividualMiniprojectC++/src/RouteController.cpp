@@ -608,6 +608,53 @@ void RouteController::retrieveCourses(const crow::request& req, crow::response& 
     }
 }
 
+/**
+ * Attempts to enroll a student in the specified department abd course.
+ *
+ * @param deptCode       A {@code String} representing the department.
+ * 
+ * @param courseCode     A {@code int} representing the course the user wishes
+ *                       to enroll a student in.
+ *
+ * @return               A crow::response object containing an HTTP 200
+ *                       response with an appropriate message or the proper status
+ *                       code in tune with what has happened.
+ */
+void RouteController::enrollStudentInCourse(const crow::request& req, crow::response& res) {
+    try {
+        auto deptCode = req.url_params.get("deptCode");
+        auto courseCode = std::stoi(req.url_params.get("courseCode"));
+
+        auto departmentMapping = myFileDatabase->getDepartmentMapping();
+        auto deptIt = departmentMapping.find(deptCode);
+
+        if (deptIt == departmentMapping.end()) {
+            res.code = 404;
+            res.write("Department Not Found");
+        } else {
+            auto coursesMapping = deptIt->second.getCourseSelection();
+            auto courseIt = coursesMapping.find(std::to_string(courseCode));
+
+            if (courseIt == coursesMapping.end()) {
+                res.code = 404;
+                res.write("Course Not Found");
+            } else {
+                bool isStudentEnrolled = courseIt->second->enrollStudent();
+                if (isStudentEnrolled) {
+                    res.code = 200;
+                    res.write("Student has been enrolled"); 
+                } else {
+                    res.code = 400;
+                    res.write("Student has not been enrolled"); 
+                }
+            }
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
 // Initialize API Routes
 void RouteController::initRoutes(crow::App<>& app) {
     CROW_ROUTE(app, "/")
@@ -686,6 +733,11 @@ void RouteController::initRoutes(crow::App<>& app) {
         });
 
     CROW_ROUTE(app, "/retrieveCourses")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
+            retrieveCourses(req, res);
+        });
+    
+    CROW_ROUTE(app, "/enrollStudentInCourse")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
             retrieveCourses(req, res);
         });
