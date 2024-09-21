@@ -26,4 +26,6 @@ TEST_F(MyAppUnitTests, MyAppTest) {
     MyFileDatabase* emptyMyFileDataBase = new MyFileDatabase(1, "testfile.bin");
     testMyApp->overrideDatabase(emptyMyFileDataBase); 
     ASSERT_EQ("", testMyApp->getDatabase()->display());
+
+    testMyApp->onTermination();
 }
