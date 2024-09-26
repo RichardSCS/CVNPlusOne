@@ -26,19 +26,19 @@ jobs:
       run: sudo apt-get install libasio-dev
 
     - name: get Crow
-      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: wget https://github.com/CrowCpp/Crow/releases/download/v1.2.0/Crow-1.2.0.zip
 
     - name: unzip Crow
-      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: unzip Crow-1.2.0.zip
 
     - name: get Boost
-      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: wget https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.gz
 
-    - name: unzip Crow
-      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+    - name: unzip Boost
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: tar -xvf boost_1_86_0.tar.gz
           
     #- name: Configure CMake
