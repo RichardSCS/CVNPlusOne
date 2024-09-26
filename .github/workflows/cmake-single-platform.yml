@@ -23,8 +23,23 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Packages
-      run: |
-        sudo apt-get install libasio-dev
+      run: sudo apt-get install libasio-dev
+
+    - name: get Crow
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: wget https://github.com/CrowCpp/Crow/releases/download/v1.2.0/Crow-1.2.0.zip
+
+    - name: unzip Crow
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: unzip Crow-1.2.0.zip
+
+    - name: get Boost
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: wget https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.gz
+
+    - name: unzip Crow
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: tar -xvf boost_1_86_0.tar.gz
           
     #- name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
