@@ -22,22 +22,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Packages
+    - name: Install ASIO
       run: sudo apt-get install libasio-dev
 
-    - name: get Crow
+    - name: Get Crow
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: wget https://github.com/CrowCpp/Crow/releases/download/v1.2.0/Crow-1.2.0.zip
 
-    - name: unzip Crow
+    - name: Unzip Crow
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: unzip Crow-1.2.0.zip
 
-    - name: get Boost
+    - name: Get Boost
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: wget https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.gz
 
-    - name: unzip Boost
+    - name: Unzip Boost
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: tar -xvf boost_1_86_0.tar.gz
           
@@ -46,7 +46,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
      # run: cmake -B ${{github.workspace}}/IndividualMiniprojectC++/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: Setup
+    - name: CMake Setup
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: cmake ..
       
@@ -55,6 +55,10 @@ jobs:
       #run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: make
+
+    - name: Project Setup
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: ./IndividualMiniproject setup
 
     - name: Test
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
