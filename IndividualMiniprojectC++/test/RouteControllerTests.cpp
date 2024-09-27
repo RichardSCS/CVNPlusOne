@@ -336,3 +336,30 @@ TEST_F(RouteControllerUnitTests, dropStudentFromCourseFail) {
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Course Not Found", response.body);
 }
+
+TEST_F(RouteControllerUnitTests, setCourseLocation) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?deptCode=COMS&courseCode=3827&location=742Evergreen"};
+    routeController.setCourseLocation(request, response);
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Attribute was updated successfully.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, setCourseLocationFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?deptCode=COMS&courseCode=382997&location=742Evergreen"};
+    routeController.setCourseLocation(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Course Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, setCourseLocationFailDept) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?deptCode=COMSSSSSS&courseCode=3827&location=742Evergreen"};
+    routeController.setCourseLocation(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Department Not Found", response.body);
+}
