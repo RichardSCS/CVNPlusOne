@@ -58,7 +58,7 @@ jobs:
 
     - name: Project Setup
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
-      run: ./IndividualMiniproject setup
+      run: ./IndividualMiniproject setup &
 
     - name: Test
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
