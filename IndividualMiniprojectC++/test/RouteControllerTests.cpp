@@ -12,7 +12,7 @@ protected:
 
     RouteControllerUnitTests() {
         routeController.initRoutes(app);
-        myApp->run("");
+        myApp->run("setup");
         routeController.setDatabase(myApp->getDatabase());
     }
     

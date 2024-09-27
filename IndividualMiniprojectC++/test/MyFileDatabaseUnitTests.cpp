@@ -14,7 +14,7 @@ protected:
 };
 
 TEST_F(MyFileDatabaseUnitTests, TestGetAndSetMapping) {    
-    MyFileDatabase* testMyFileDatabase = new MyFileDatabase(0, "testdbfile.bin");
+    MyFileDatabase* testMyFileDatabase = new MyFileDatabase(1, "testdbfile.bin");
     std::shared_ptr<Course> testCourse = std::make_shared<Course>(250, "Griffin Newbold", "417 IAB", "11:40-12:55");
     std::shared_ptr<Course> testCourse2 = std::make_shared<Course>(500, "Adam Johnson", "420 ASA", "12:45-3:00");
 
