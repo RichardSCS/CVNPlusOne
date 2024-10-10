@@ -31,6 +31,8 @@ class RouteController {
         void dropStudentFromCourse(const crow::request&, crow::response& res);
         void retrieveCourses(const crow::request& req, crow::response& res);
         void enrollStudentInCourse(const crow::request& req, crow::response& res);
+
+        void retrieveAppointment(const crow::request& req, crow::response& res);
 };
 
 #endif 

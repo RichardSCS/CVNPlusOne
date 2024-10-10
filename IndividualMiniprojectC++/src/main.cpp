@@ -9,6 +9,7 @@
 #include "MyApp.h"
 #include "Course.h"
 #include "Department.h"
+#include "Appointment.h"
 #include "MyFileDatabase.h"
 #include "RouteController.h"
 

@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Globals.h"
 #include "MyFileDatabase.h"
+#include "Appointment.h"
 #include "../external_libraries/Crow-1.2.0-Darwin/include/crow.h"
 
 // Utility function to handle exceptions
@@ -44,6 +45,26 @@ void RouteController::retrieveDepartment(const crow::request& req, crow::respons
         if (it == departmentMapping.end()) {
             res.code = 404;
             res.write("Department Not Found");
+        } else {
+            res.code = 200;
+            res.write(it->second.display()); // Use dot operator to access method
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
+
+void RouteController::retrieveAppointment(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+
+        auto it = appointmentMapping.find(apptCode);
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment Not Found");
         } else {
             res.code = 200;
             res.write(it->second.display()); // Use dot operator to access method
@@ -665,6 +686,11 @@ void RouteController::initRoutes(crow::App<>& app) {
     CROW_ROUTE(app, "/retrieveDept")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
             retrieveDepartment(req, res);
+        });
+
+    CROW_ROUTE(app, "/retrieveAppt")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
+            retrieveAppointment(req, res);
         });
 
     CROW_ROUTE(app, "/retrieveCourse")

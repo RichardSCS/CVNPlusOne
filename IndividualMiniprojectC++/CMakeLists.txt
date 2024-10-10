@@ -12,6 +12,7 @@ add_executable(IndividualMiniproject
     src/main.cpp 
     src/Course.cpp 
     src/Department.cpp 
+    src/Appointment.cpp
     src/MyFileDatabase.cpp 
     src/RouteController.cpp
     src/MyApp.cpp
@@ -54,6 +55,7 @@ add_executable(IndividualMiniprojectTests
   test/RouteControllerTests.cpp
   src/Course.cpp
   src/Department.cpp
+  src/Appointment.cpp
   src/MyFileDatabase.cpp
   src/MyApp.cpp
   src/RouteController.cpp

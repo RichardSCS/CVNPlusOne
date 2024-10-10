@@ -26,6 +26,10 @@ void MyFileDatabase::setMapping(const std::map<std::string, Department>& mapping
     departmentMapping = mapping;
 }
 
+void MyFileDatabase::setApptMapping(const std::map<std::string, Appointment>& mapping) {
+    appointmentMapping = mapping;
+}
+
 /**
  * Gets the department mapping of the database.
  *
@@ -33,6 +37,10 @@ void MyFileDatabase::setMapping(const std::map<std::string, Department>& mapping
  */
 std::map<std::string, Department> MyFileDatabase::getDepartmentMapping() const {
     return departmentMapping;
+}
+
+std::map<std::string, Appointment> MyFileDatabase::getAppointmentMapping() const {
+    return appointmentMapping;
 }
 
 /**
