@@ -7,8 +7,6 @@
 #include "../external_libraries/Crow-1.2.0-Darwin/include/crow.h"
 #include "Globals.h"
 #include "MyApp.h"
-#include "Course.h"
-#include "Department.h"
 #include "Appointment.h"
 #include "MyFileDatabase.h"
 #include "RouteController.h"

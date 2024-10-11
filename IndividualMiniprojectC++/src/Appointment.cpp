@@ -3,6 +3,7 @@
 #include "Appointment.h"
 #include <iostream>
 #include <string>
+#include <ctime>
 
 
 /**
@@ -43,7 +44,12 @@ std::string Appointment::getApptLocation() const
 }
 
 std::string Appointment::display() const {
-    return "\nTitle: " + title + "; Location: " + location + "; Start Time: " + std::to_string(startTime) + "; End Time: " + std::to_string(endTime);
+    char strt[32], end[32];
+    std::strftime(strt, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&startTime)); 
+    std::strftime(end, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&endTime)); 
+    std::string strtStr = strt;
+    std::string endStr = end;
+    return "\nTitle: " + title + "; Location: " + location + "; Start Time: " + strtStr + "; End Time: " + endStr;
 }
 
 void Appointment::setStartTime(const time_t newStartTime)

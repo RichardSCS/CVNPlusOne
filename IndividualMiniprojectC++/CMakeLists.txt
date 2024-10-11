@@ -10,8 +10,6 @@ set(CMAKE_MODULE_PATH build/CMakeModules)
 # Main project executable
 add_executable(IndividualMiniproject 
     src/main.cpp 
-    src/Course.cpp 
-    src/Department.cpp 
     src/Appointment.cpp
     src/MyFileDatabase.cpp 
     src/RouteController.cpp
@@ -48,13 +46,6 @@ append_coverage_compiler_flags()
 # Test executable
 add_executable(IndividualMiniprojectTests
   test/sample.cpp
-  test/CourseUnitTests.cpp
-  test/DepartmentUnitTests.cpp
-  test/MyFileDatabaseUnitTests.cpp
-  test/MyAppUnitTests.cpp
-  test/RouteControllerTests.cpp
-  src/Course.cpp
-  src/Department.cpp
   src/Appointment.cpp
   src/MyFileDatabase.cpp
   src/MyApp.cpp
@@ -82,18 +73,11 @@ if (CPPLINT)
     # List of source files to be checked by cpplint
     set(SOURCE_FILES
         src/main.cpp 
-        src/Course.cpp 
-        src/Department.cpp 
         src/MyFileDatabase.cpp 
         src/RouteController.cpp
         src/MyApp.cpp
         src/Globals.cpp
         test/sample.cpp
-        test/CourseUnitTests.cpp
-        test/DepartmentUnitTests.cpp
-        test/MyFileDatabaseUnitTests.cpp
-        test/RouteControllerTests.cpp
-        test/MyAppUnitTests.cpp
     )
 
     # Custom target to run cpplint

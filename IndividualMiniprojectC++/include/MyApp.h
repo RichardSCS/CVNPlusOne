@@ -3,8 +3,6 @@
 
 #include <string>
 #include <map>
-#include "Course.h"
-#include "Department.h"
 #include "MyFileDatabase.h"
 
 class MyApp {
