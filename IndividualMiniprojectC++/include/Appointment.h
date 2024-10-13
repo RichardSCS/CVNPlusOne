@@ -11,6 +11,8 @@ class Appointment {
         time_t endTime;
         std::string location;
         std::set<std::string> participants;
+        void setStartTime(const time_t newStartTime);
+        void setEndTime(const time_t newEndTime);
     
     public:
         Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location);
@@ -23,9 +25,9 @@ class Appointment {
         std::string getApptLocation() const;
         std::string display() const;
 
-        void setStartTime(const time_t newStartTime);
-        void setEndTime(const time_t newEndTime);
+        bool setTimes(const time_t newStartTime, const time_t newEndTime);
         void setLocation(const std::string &newLocation);
+        void setTitle(const std::string &newTitle);
         void addParticipant(const std::string &newParticipant);
         void removeParticipant(const std::string &participant);
 };

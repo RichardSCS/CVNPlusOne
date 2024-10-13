@@ -1,4 +1,4 @@
-// Copyright 2024 Jacob Aaronson
+// Copyright 2024 CVNPlusOne
 
 #include "MyApp.h"
 #include "Appointment.h"
@@ -16,12 +16,6 @@ void MyApp::run(const std::string& mode) {
     }
     myFileDatabase = new MyFileDatabase(0, "testfile.bin");
     std::cout << "Start up" << std::endl;
-
-
-    // Appointment appt1("APPT1", "Doctor Appointment", 1730383200, 1730386800, "Clinic");
-    // std::map<std::string, Appointment> apptMapping;
-    // apptMapping["APPT1"] = appt1;
-    // myFileDatabase->setApptMapping(apptMapping);
 }
 
 void MyApp::onTermination() {
@@ -47,5 +41,4 @@ void MyApp::setupDatabase() {
 }
 
 void MyApp::resetDataFile() {
-    
 }
