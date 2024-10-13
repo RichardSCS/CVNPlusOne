@@ -92,7 +92,6 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
 
 void RouteController::updateAppointmentTime(const crow::request& req, crow::response& res) {
     try {
-         std::cout << "gothere" << std::endl;   
         auto apptCode = req.url_params.get("apptCode");
         auto startTimeStr = (req.url_params.get("startTime"));
         auto endTimeStr = (req.url_params.get("endTime"));
