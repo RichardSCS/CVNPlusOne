@@ -22,7 +22,22 @@ void MyFileDatabase::setApptMapping(const std::map<std::string, Appointment>& ma
     appointmentMapping = mapping;
 }
 
-
 std::map<std::string, Appointment> MyFileDatabase::getAppointmentMapping() const {
     return appointmentMapping;
+}
+
+
+bool MyFileDatabase::removeAppointment(const std::string& apptCode) {
+    auto appointmentMapping = getAppointmentMapping();
+
+    auto it = appointmentMapping.find(apptCode);
+
+    if (it == appointmentMapping.end()) {
+        return false;
+    }
+
+    appointmentMapping.erase(it);
+    setApptMapping(appointmentMapping);
+
+    return true;
 }

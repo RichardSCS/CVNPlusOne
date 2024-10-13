@@ -15,6 +15,7 @@ class RouteController {
 
         void index(crow::response& res);
         void retrieveAppointment(const crow::request& req, crow::response& res);
+        void deleteAppointment(const crow::request& req, crow::response& res);
 };
 
 #endif 

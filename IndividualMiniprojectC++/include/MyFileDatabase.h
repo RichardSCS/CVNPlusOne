@@ -14,6 +14,7 @@ class MyFileDatabase {
         
         std::map<std::string, Appointment> getAppointmentMapping() const;
         std::string display() const;
+        bool removeAppointment(const std::string& apptCode);
 
     private:
         std::string filePath;
