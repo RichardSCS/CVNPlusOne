@@ -18,11 +18,11 @@ class Appointment {
         Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location);
         Appointment();
 
-        std::string getApptCode() const;
-        std::string getApptTitle() const;
-        time_t getApptStartTime() const;
-        time_t getApptEndTime() const;
-        std::string getApptLocation() const;
+        const std::string& getApptCode() const;
+        const std::string& getApptTitle() const;
+        const time_t getApptStartTime() const;
+        const time_t getApptEndTime() const;
+        const std::string& getApptLocation() const;
         std::string display() const;
 
         bool setTimes(const time_t newStartTime, const time_t newEndTime);

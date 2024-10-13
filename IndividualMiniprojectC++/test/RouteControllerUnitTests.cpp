@@ -42,7 +42,14 @@ TEST_F(RouteControllerUnitTests, RetrieveAppointmentTest) {
     request.url_params = crow::query_string{"?apptCode=APPT1"};
     routeController.retrieveAppointment(request, response);
     ASSERT_EQ(200, response.code);
-    ASSERT_EQ("\nTitle: Doctor Appointment; Location: Clinic; Start Time: Thu, 2024-10-31 10:00; End Time: Thu, 2024-10-31 11:00", response.body);
+    time_t startTime = 1730383200;
+    time_t endTime = 1730386800;
+    char strt[32], end[32];
+    std::strftime(strt, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&startTime));
+    std::strftime(end, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&endTime));
+    std::string strtStr = strt;
+    std::string endStr = end;
+    ASSERT_EQ("\nTitle: Doctor Appointment; Location: Clinic; Start Time: " + strtStr + "; End Time: " + endStr, response.body);
 }
 
 TEST_F(RouteControllerUnitTests, RetrieveAppointmentTestFail) {    

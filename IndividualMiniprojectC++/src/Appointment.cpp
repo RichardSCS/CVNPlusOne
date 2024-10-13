@@ -23,19 +23,19 @@ Appointment::Appointment(std::string code, std::string title, time_t startTime, 
  */
 Appointment::Appointment() : code(""), title(""), startTime(0), endTime(0), location("") {}
 
-std::string Appointment::getApptTitle() const {
+const std::string& Appointment::getApptTitle() const {
     return title;
 }
 
-time_t Appointment::getApptStartTime() const {
+const time_t Appointment::getApptStartTime() const {
     return startTime;
 }
        
-time_t Appointment::getApptEndTime() const {
+const time_t Appointment::getApptEndTime() const {
     return endTime;
 }
 
-std::string Appointment::getApptLocation() const {
+const std::string& Appointment::getApptLocation() const {
     return location;
 }
 

@@ -19,7 +19,14 @@ protected:
 Appointment* AppointmentUnitTests::testAppointment = nullptr;
 
 TEST_F(AppointmentUnitTests, ToStringTest) {
-    std::string expectedResult = "\nTitle: Test Appointment 1; Location: Dentist Office; Start Time: Wed, 2024-10-23 07:00; End Time: Wed, 2024-10-23 07:10";
+    char strt[32], end[32];
+    std::time_t apptStartTime = testAppointment->getApptStartTime();
+    std::time_t apptEndTime = testAppointment->getApptEndTime();
+    std::strftime(strt, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&apptStartTime));
+    std::strftime(end, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&apptEndTime));
+    std::string strtStr = strt;
+    std::string endStr = end;
+    std::string expectedResult = "\nTitle: Test Appointment 1; Location: Dentist Office; Start Time: " + strtStr + "; End Time: " + endStr;
     ASSERT_EQ(expectedResult, testAppointment->display());
 }
 
