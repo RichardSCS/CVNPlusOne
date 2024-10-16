@@ -56,7 +56,6 @@ void RouteController::createAppointment(const crow::request& req, crow::response
         auto location = req.url_params.get("location");
         std::string apptCode = "APPT" + std::to_string(apptCodeCounter++);
 
-        std::cout << apptCode << " " << title << std::endl;
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
