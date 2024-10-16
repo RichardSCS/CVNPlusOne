@@ -1,4 +1,4 @@
-// Copyright 2024 Jacob Aaronson
+// Copyright 2024 CVNPlusOne
 
 #include "MyFileDatabase.h"
 #include <iostream>
