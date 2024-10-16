@@ -29,12 +29,6 @@ This section describes the endpoints that the service provides, as well as their
 * Upon Success: HTTP 200 Status Code is returned along with appointment details in the response body
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
 
-#### GET /createAppt
-* Expected Input Parameters: title startTime endTime location
-* Expected Output: apptCode
-* Upon Success: HTTP 200 Status Code is returned along with appointment code in the response body
-* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Exists :" and details of appointmentin the response body. 
-
 ## Style Checking Report
 The cpplint tool was used to check the style of the code.
 

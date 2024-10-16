@@ -10,8 +10,6 @@
 #include "Appointment.h"
 #include "../external_libraries/Crow-1.2.0-Darwin/include/crow.h"
 
-int apptCodeCounter = 2;
-
 // Utility function to handle exceptions
 crow::response handleException(const std::exception& e) {
     std::cerr << e.what() << std::endl;
@@ -48,45 +46,12 @@ void RouteController::retrieveAppointment(const crow::request& req, crow::respon
     }
 }
 
-void RouteController::createAppointment(const crow::request& req, crow::response& res) {
-    try {
-        auto title = req.url_params.get("title");
-        auto startTime = std::stoi(req.url_params.get("startTime"));
-        auto endTime = std::stoi(req.url_params.get("endTime"));
-        auto location = req.url_params.get("location");
-        std::string apptCode = "APPT" + std::to_string(apptCodeCounter++);
-
-        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
-
-        auto it = appointmentMapping.find(apptCode);
-        if (it == appointmentMapping.end()) {
-            res.code = 200;
-            res.write("Appointment Created : apptCode ");
-            res.write(apptCode);
-            Appointment appt(apptCode, title, startTime, endTime, location);
-            appointmentMapping[apptCode] = appt;
-            myFileDatabase->setApptMapping(appointmentMapping);
-        } else {
-            res.code = 404;
-            res.write("Appointment Exists : ");
-            res.write(it->second.display()); // Use dot operator to access method
-        }
-        res.end();
-    } catch (const std::exception& e) {
-        res = handleException(e);
-    }
-}
-
 // Initialize API Routes
 void RouteController::initRoutes(crow::App<>& app) {
 
     CROW_ROUTE(app, "/retrieveAppt")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
             retrieveAppointment(req, res);
-        });
-    CROW_ROUTE(app, "/createAppt")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
-            createAppointment(req, res);
         });
 }
 
