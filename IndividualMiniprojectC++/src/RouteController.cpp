@@ -63,10 +63,9 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             res.code = 200;
             res.write("Appointment Created : apptCode ");
             res.write(apptCode);
-            Appointment appt1(apptCode, title, startTime, endTime, location);
-            std::map<std::string, Appointment> apptMapping;
-            apptMapping[apptCode] = appt1;
-            myFileDatabase->setApptMapping(apptMapping);
+            Appointment appt(apptCode, title, startTime, endTime, location);
+            appointmentMapping[apptCode] = appt;
+            myFileDatabase->setApptMapping(appointmentMapping);
         } else {
             res.code = 404;
             res.write("Appointment Exists : ");
