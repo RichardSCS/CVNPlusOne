@@ -36,6 +36,41 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {
     ASSERT_EQ("Appointment Created : apptCode APPT2", response.body);
 }
 
+TEST_F(RouteControllerUnitTests, DeleteAppointmentSuccess) {
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT1"};
+    
+    routeController.deleteAppointment(request, response);
+    
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Appointment deleted successfully", response.body);
+    
+    auto appointmentMapping = myApp->getDatabase()->getAppointmentMapping();
+    ASSERT_EQ(appointmentMapping.find("APPT1"), appointmentMapping.end());
+}
+
+TEST_F(RouteControllerUnitTests, DeleteAppointmentMissingCode) {
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?"};
+    
+    routeController.deleteAppointment(request, response);
+    
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment code", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, DeleteAppointmentNotFound) {
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=NOTFOUND"};
+    
+    routeController.deleteAppointment(request, response);
+    
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment not found", response.body);
+}
 TEST_F(RouteControllerUnitTests, RetrieveAppointmentTest) {    
     crow::request request;
     crow::response response;

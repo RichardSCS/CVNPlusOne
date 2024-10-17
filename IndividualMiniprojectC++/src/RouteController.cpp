@@ -121,6 +121,36 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
     }
 }
 
+void RouteController::deleteAppointment(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        if (!apptCode) {
+            res.code = 400; 
+            res.write("Missing appointment code");
+            res.end();
+            return;
+        }
+
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+        auto it = appointmentMapping.find(apptCode);
+
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment not found");
+            res.end();
+            return;
+        }
+
+        appointmentMapping.erase(it);
+        myFileDatabase->removeAppointment(apptCode);
+
+        res.code = 200;
+        res.write("Appointment deleted successfully");
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
 void RouteController::createAppointment(const crow::request& req, crow::response& res) {
     try {
         auto title = req.url_params.get("title");
@@ -157,6 +187,12 @@ void RouteController::initRoutes(crow::App<>& app) {
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
             retrieveAppointment(req, res);
         });
+    
+    CROW_ROUTE(app, "/deleteAppt")
+        .methods(crow::HTTPMethod::DELETE)([this](const crow::request& req, crow::response& res) {
+            deleteAppointment(req, res);
+        });
+    
     CROW_ROUTE(app, "/createAppt")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
             createAppointment(req, res);
