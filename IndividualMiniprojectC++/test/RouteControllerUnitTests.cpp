@@ -1,3 +1,5 @@
+// Copyright 2024 CVNPlusOne
+
 #include <gtest/gtest.h>
 #include "RouteController.h" 
 #include "MyApp.h"
@@ -22,6 +24,8 @@ protected:
     }
 
 };
+
+MyApp* RouteControllerUnitTests::myApp = nullptr;
 
 TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {    
     crow::request request;
@@ -66,4 +70,73 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentNotFound) {
     
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Appointment not found", response.body);
+}
+TEST_F(RouteControllerUnitTests, RetrieveAppointmentTest) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT1"};
+    routeController.retrieveAppointment(request, response);
+    ASSERT_EQ(200, response.code);
+    time_t startTime = 1730383200;
+    time_t endTime = 1730386800;
+    char strt[32], end[32];
+    std::strftime(strt, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&startTime));
+    std::strftime(end, 32, "%a, %Y-%m-%d %H:%M", std::localtime(&endTime));
+    std::string strtStr = strt;
+    std::string endStr = end;
+    ASSERT_EQ("\nTitle: Doctor Appointment; Location: Clinic; Start Time: " + strtStr + "; End Time: " + endStr, response.body);
+}
+
+TEST_F(RouteControllerUnitTests, RetrieveAppointmentTestFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT133"};
+    routeController.retrieveAppointment(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTimeTest) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT1&startTime=1730383201&endTime=1730383801"};
+    routeController.updateAppointmentTime(request, response);
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Appointment time successfully updated.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTimeTestFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT133&startTime=1730383201&endTime=1730383801"};
+    routeController.updateAppointmentTime(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTimeTestFail2) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT1&startTime=1730383801&endTime=1730383800"};
+    routeController.updateAppointmentTime(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Failed to update appointment time.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleTest) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT1&apptTitle=\"PT Appointment\""};
+    routeController.updateAppointmentTitle(request, response);
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Appointment title successfully updated.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleTestFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT133&apptTitle=PT Appointment"};
+    routeController.updateAppointmentTitle(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment Not Found", response.body);
 }

@@ -50,6 +50,7 @@ add_executable(IndividualMiniprojectTests
   src/MyFileDatabase.cpp
   src/MyApp.cpp
   src/RouteController.cpp
+  test/AppointmentUnitTests.cpp
   test/RouteControllerUnitTests.cpp
 )
 
@@ -78,7 +79,9 @@ if (CPPLINT)
         src/RouteController.cpp
         src/MyApp.cpp
         src/Globals.cpp
+        src/Appointment.cpp
         test/sample.cpp
+        test/AppointmentUnitTests.cpp
         test/RouteControllerUnitTests.cpp
     )
 

@@ -1,4 +1,4 @@
-// Copyright 2024 Jacob Aaronson
+// Copyright 2024 CVNPlusOne
 
 #include "RouteController.h"
 #include <map>
@@ -40,7 +40,80 @@ void RouteController::retrieveAppointment(const crow::request& req, crow::respon
             res.write("Appointment Not Found");
         } else {
             res.code = 200;
-            res.write(it->second.display()); // Use dot operator to access method
+            res.write(it->second.display());
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
+void RouteController::updateAppointmentTitle(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        auto apptTitle = req.url_params.get("apptTitle");
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+
+        auto it = appointmentMapping.find(apptCode);
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment Not Found");
+        } else {
+            it->second.setTitle(apptTitle);
+            res.code = 200;
+            res.write("Appointment title successfully updated.");
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
+void RouteController::updateAppointmentLocation(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        auto apptLocation = req.url_params.get("apptLocation");
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+
+        auto it = appointmentMapping.find(apptCode);
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment Not Found");
+        } else {
+            it->second.setLocation(apptLocation);
+            res.code = 200;
+            res.write("Appointment location successfully updated.");
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
+void RouteController::updateAppointmentTime(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        auto startTimeStr = (req.url_params.get("startTime"));
+        auto endTimeStr = (req.url_params.get("endTime"));
+
+        int startTime = std::stoi(startTimeStr);
+        int endTime = std::stoi(endTimeStr);
+       
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+        
+
+        auto it = appointmentMapping.find(apptCode);
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment Not Found");
+        } else {
+            if (it->second.setTimes(startTime, endTime)) {
+                res.code = 200;
+                res.write("Appointment time successfully updated.");
+            } else {
+                res.code = 400;
+                res.write("Failed to update appointment time.");
+            }
         }
         res.end();
     } catch (const std::exception& e) {
@@ -123,6 +196,14 @@ void RouteController::initRoutes(crow::App<>& app) {
     CROW_ROUTE(app, "/createAppt")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
             createAppointment(req, res);
+        });
+    CROW_ROUTE(app, "/updateApptTitle")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
+            updateAppointmentTitle(req, res);
+        });
+    CROW_ROUTE(app, "/updateApptTimes")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
+            updateAppointmentTime(req, res);
         });
 }
 
