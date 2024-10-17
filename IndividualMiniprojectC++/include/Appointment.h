@@ -18,6 +18,9 @@ class Appointment {
         Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location);
         Appointment();
 
+        void serialize(std::ostream& out) const;
+        void deserialize(std::istream& in);
+
         const std::string& getApptCode() const;
         const std::string& getApptTitle() const;
         const time_t getApptStartTime() const;
