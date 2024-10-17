@@ -12,10 +12,9 @@
  * @param filePath the path to the file containing the entries of the database
  */
 MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : filePath(filePath) {
-    Appointment appt1("APPT1", "Doctor Appointment", 1730383200, 1730386800, "Clinic");
-    std::map<std::string, Appointment> apptMapping;
-    apptMapping["APPT1"] = appt1;
-    setApptMapping(apptMapping);
+    if (flag == 0) {
+        deSerializeObjectFromFile();
+    }
 }
 
 void MyFileDatabase::setApptMapping(const std::map<std::string, Appointment>& mapping) {
