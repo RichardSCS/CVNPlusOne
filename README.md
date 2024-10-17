@@ -29,11 +29,39 @@ This section describes the endpoints that the service provides, as well as their
 * Upon Success: HTTP 200 Status Code is returned along with appointment details in the response body
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
 
+#### DELETE /deleteAppt
+* Expected Input Parameters: apptCode
+* Expected Output: 
+* Upon Success: HTTP 200 Status Code is returned along with 
+"Appointment deleted successfully" in the response body
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
+
 #### GET /createAppt
 * Expected Input Parameters: title startTime endTime location
 * Expected Output: apptCode
-* Upon Success: HTTP 200 Status Code is returned along with appointment code in the response body
+* Upon Success: HTTP 200 Status Code is returned along with 
+"Appointment Created : apptCode " and appointment code in the response body
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Exists :" and details of appointmentin the response body. 
+
+#### PATCH /updateApptTitle
+* Expected Input Parameters: apptCode apptTitle
+* Expected Output: status code
+* Upon Success: HTTP 200 Status Code is returned along with with 
+"Appointment title successfully updated." in the response body.
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
+
+#### PATCH /updateApptLocation
+* Expected Input Parameters: apptCode apptLocation
+* Expected Output: status code
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment location successfully updated." in the response body
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
+
+#### PATCH /updateApptTimes
+* Expected Input Parameters: apptCode startTime endTime
+* Expected Output: status code
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment time successfully updated." in the response body
+* Upon Failure: If cannot find appointment code, HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
+If cannot update appointment tume, HTTP 400 Status Code is returned along with "Failed to update appointment time." in the response body. 
 
 ## Style Checking Report
 The cpplint tool was used to check the style of the code.
@@ -46,3 +74,6 @@ The cppcheck tool was used to perform static analysis on the codebase.
 
 ## Continuous Integration Report
 We are using GitHub Actions to perform continous integration. 
+
+## Tools used
+We use Postman for API testing, and Github Issue for project management purpose
