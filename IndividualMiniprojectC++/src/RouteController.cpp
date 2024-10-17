@@ -154,9 +154,39 @@ void RouteController::deleteAppointment(const crow::request& req, crow::response
 void RouteController::createAppointment(const crow::request& req, crow::response& res) {
     try {
         auto title = req.url_params.get("title");
-        auto startTime = std::stoi(req.url_params.get("startTime"));
-        auto endTime = std::stoi(req.url_params.get("endTime"));
+        if (!title) {
+            res.code = 400; 
+            res.write("Missing appointment title");
+            res.end();
+            return;
+        }
+
+        auto startTimeStr = req.url_params.get("startTime");
+        if (!startTimeStr) {
+            res.code = 400; 
+            res.write("Missing appointment startTime");
+            res.end();
+            return;
+        }
+        auto startTime = std::stoi(startTimeStr);
+
+        auto endTimeStr = req.url_params.get("endTime");
+        if (!endTimeStr) {
+            res.code = 400; 
+            res.write("Missing appointment endTime");
+            res.end();
+            return;
+        }
+        auto endTime = std::stoi(endTimeStr);
+
         auto location = req.url_params.get("location");
+        if (!location) {
+            res.code = 400; 
+            res.write("Missing appointment location");
+            res.end();
+            return;
+        }
+
         std::string apptCode = "APPT" + std::to_string(apptCodeCounter++);
 
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
