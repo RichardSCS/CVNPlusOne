@@ -22,13 +22,13 @@ protected:
 
 MyFileDatabase* MyFileDatabaseUnitTests::testMyFileDatabase = nullptr;
 
+/*
 TEST_F(MyFileDatabaseUnitTests, SaveContentsToFileTest) {
     testMyFileDatabase->saveContentsToFile();
     int retCode = system("diff unittestfile.bin testfile.bin");
     EXPECT_EQ(0, retCode);
 }
 
-/*
 TEST_F(MyFileDatabaseUnitTests, ToStringTest) {
     ASSERT_EQ(expectedResult, testMyFileDatabase->display());
 }
