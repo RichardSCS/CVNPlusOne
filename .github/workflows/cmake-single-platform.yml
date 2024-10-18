@@ -66,10 +66,16 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ./IndividualMiniprojectTests
 
-    - name: cppcheck
-      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
-      run: make cppcheck
+    - name: Install cpplint
+      run: pip install cpplint
 
     - name: cpplint
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: make cpplint
+
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
+    - name: cppcheck
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: make cppcheck
