@@ -136,3 +136,9 @@ target_link_libraries(CodeCoverage PRIVATE
   gtest
   gtest_main
 )
+
+find_program(CPPCHECK cppcheck)
+add_custom_target(
+  cppcheck
+  COMMAND ${CPPCHECK} -I ../include/ --enable=all --library=posix ../src/ ../test/
+)
