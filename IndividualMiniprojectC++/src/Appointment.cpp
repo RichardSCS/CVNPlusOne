@@ -81,3 +81,41 @@ void Appointment::addParticipant(const std::string &newParticipant) {
 void Appointment::removeParticipant(const std::string &participant) {
     participants.erase(participant);
 }
+
+void Appointment::serialize(std::ostream& out) const {
+    size_t codeLen = code.length();
+    out.write(reinterpret_cast<const char*>(&codeLen), sizeof(codeLen));
+    out.write(code.c_str(), codeLen);
+
+    size_t titleLen = title.length();
+    out.write(reinterpret_cast<const char*>(&titleLen), sizeof(titleLen));
+    out.write(title.c_str(), titleLen);
+
+    out.write(reinterpret_cast<const char*>(&startTime), sizeof(startTime));
+    out.write(reinterpret_cast<const char*>(&endTime), sizeof(endTime));
+
+    size_t locationLen = location.length();
+    out.write(reinterpret_cast<const char*>(&locationLen), sizeof(locationLen));
+    out.write(location.c_str(), locationLen);
+
+}
+
+void Appointment::deserialize(std::istream& in) {
+    size_t codeLen;
+    in.read(reinterpret_cast<char*>(&codeLen), sizeof(codeLen));
+    code.resize(codeLen);
+    in.read(&code[0], codeLen);
+
+    size_t titleLen;
+    in.read(reinterpret_cast<char*>(&titleLen), sizeof(titleLen));
+    title.resize(titleLen);
+    in.read(&title[0], titleLen);
+
+    in.read(reinterpret_cast<char*>(&startTime), sizeof(startTime));
+    in.read(reinterpret_cast<char*>(&endTime), sizeof(endTime));
+
+    size_t locationLen;
+    in.read(reinterpret_cast<char*>(&locationLen), sizeof(locationLen));
+    location.resize(locationLen);
+    in.read(&location[0], locationLen);
+}

@@ -10,7 +10,7 @@
 #include "Appointment.h"
 #include "../external_libraries/Crow-1.2.0-Darwin/include/crow.h"
 
-int apptCodeCounter = 2;
+int apptCodeCounter = 4;
 
 // Utility function to handle exceptions
 crow::response handleException(const std::exception& e) {
@@ -228,7 +228,7 @@ void RouteController::initRoutes(crow::App<>& app) {
         });
     
     CROW_ROUTE(app, "/createAppt")
-        .methods(crow::HTTPMethod::PUT)([this](const crow::request& req, crow::response& res) {
+        .methods(crow::HTTPMethod::POST)([this](const crow::request& req, crow::response& res) {
             createAppointment(req, res);
         });
     CROW_ROUTE(app, "/updateApptTitle")
