@@ -36,6 +36,42 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {
     ASSERT_EQ("Appointment Created : apptCode APPT2", response.body);
 }
 
+TEST_F(RouteControllerUnitTests, CreateAppointmentMissingTitle) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?startTime=1730383200&endTime=1730383800&location=Pharmacy"};
+    routeController.createAppointment(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment title", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, CreateAppointmentMissingStartTime) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?title=Meeting&endTime=1730383800&location=Pharmacy"};
+    routeController.createAppointment(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment startTime", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, CreateAppointmentMissingEndTime) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&location=Pharmacy"};
+    routeController.createAppointment(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment endTime", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, CreateAppointmentMissingLocation) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800"};
+    routeController.createAppointment(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment location", response.body);
+}
+
 TEST_F(RouteControllerUnitTests, DeleteAppointmentSuccess) {
     crow::request request;
     crow::response response;
