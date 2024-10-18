@@ -64,6 +64,9 @@ This section describes the endpoints that the service provides, as well as their
 * Upon Success: HTTP 200 Status Code is returned along with "Appointment time successfully updated." in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" or HTTP 400 Status Code is returned along with "Failed to update appointment time." in the response body. 
 
+## Database
+For first iteration we have set up testfile.bin. On calling `IndividualMiniproject setup`, db entries will be setup. On subsequent calls to IndividualMiniproject without `setup`, it reads the appointments from the db. On termination it writes the appointments created into the db.
+
 ## Style Checking Report
 The cpplint tool was used to check the style of the code.
 
