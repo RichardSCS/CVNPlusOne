@@ -1,0 +1,23 @@
+Resources used in CVNPlusOne Team Project
+-----------------------------------------
+
+1. Cppcheck for static analysis
+https://cppcheck.sourceforge.io/manual.pdf
+
+2. Coverage testing with CMake and LCov
+https://man.archlinux.org/man/lcov.1.en
+https://wiki.documentfoundation.org/Development/Lcov
+
+5. GoogleTest User’s Guide
+https://google.github.io/googletest/
+
+6. Google C++ Style Guide
+https://google.github.io/styleguide/cppguide.html#Self_contained_Headers
+
+7. Static code checker cpplint
+https://manpages.ubuntu.com/manpages/jammy/man1/cpplint.1.html
+https://formulae.brew.sh/formula/cpplint
+
+7. CMake 
+https://cmake.org/cmake/help/latest/manual/cmake.1.html
+https://manpages.ubuntu.com/manpages/trusty/man1/cmake.1.html
