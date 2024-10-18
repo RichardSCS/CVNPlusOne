@@ -1,0 +1,16 @@
+We, <Richard Cruz-Silva (rsc2174)>, <Jianyi Gao (jg4553)>, <Jacob Aaronson (jja2166)> and <Rumi Ghosh (rg3374)>, have read and understood the following:
+
+CS department's Policies and Procedures on Academic Honesty
+The Course Specific Academic Honesty Policies
+The assignment specs outlining the consequences of not submitting this pledge and other aspects of the policy
+We affirm that we will abide by all the policies stated in the relevant materials from above. We understand that the relevant policies apply to: individual assignments, group projects, and individual examinations.
+
+We also affirm that we understand that all course materials, with the exception of the individual/group project, are subject to the appropriate copyrights and thus will not post them on any public forum or publicly hosted repository, this includes but is not limited to: GitHub, stackoverflow, chegg etc.
+
+We also affirm that we will be 100% honest when evaluating the performance of myself and my teammates when prompted by an assignment or member of the teaching staff.
+
+Finally we affirm that we will not attempt to find any loopholes in these policies for the benefit of myself or others enrolled in the course presently or possibly in the future.
+
+Signed: 
+
+<Rumi Ghosh (rg3374)> <10/18/24>
