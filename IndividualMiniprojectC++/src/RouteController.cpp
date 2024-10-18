@@ -149,6 +149,7 @@ void RouteController::deleteAppointment(const crow::request& req, crow::response
 
         res.code = 200;
         res.write("Appointment deleted successfully");
+        res.end();
     } catch (const std::exception& e) {
         res = handleException(e);
     }
@@ -227,7 +228,7 @@ void RouteController::initRoutes(crow::App<>& app) {
         });
     
     CROW_ROUTE(app, "/createAppt")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
+        .methods(crow::HTTPMethod::PUT)([this](const crow::request& req, crow::response& res) {
             createAppointment(req, res);
         });
     CROW_ROUTE(app, "/updateApptTitle")
