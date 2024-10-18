@@ -67,7 +67,7 @@ jobs:
       run: ./IndividualMiniprojectTests
 
     - name: cppcheck
-      working-directory: ${{github.worksapce}}/IndividualMiniprojectC++/build
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: make cppcheck
 
     - name: cpplint
