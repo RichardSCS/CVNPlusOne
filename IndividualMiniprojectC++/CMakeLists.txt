@@ -40,8 +40,7 @@ target_link_libraries(IndividualMiniproject PRIVATE
 
 enable_testing()
 
-include(CodeCoverage.cmake)
-append_coverage_compiler_flags()
+#include(CodeCoverage.cmake)
 
 # Test executable
 add_executable(IndividualMiniprojectTests
@@ -95,3 +94,45 @@ if (CPPLINT)
 else()
     message(WARNING "cpplint not found! Skipping style checks.")
 endif()
+
+if (ENABLE_COVERAGE)
+  # set compiler flags
+  set(CMAKE_CXX_FLAGS "-O0 -coverage")
+
+  # find required tools
+  find_program(LCOV lcov REQUIRED)
+  find_program(GENHTML genhtml REQUIRED)
+
+  # add coverage target
+  add_custom_target(
+    coverage
+    # gather data
+    COMMAND ${LCOV} --directory . --capture --output-file coverage.info
+    # exclude header files
+    COMMAND ${LCOV} --remove coverage.info '/usr/*' '*_deps/*' '*crow*' --output-file coverage.info
+    COMMAND ${LCOV} --remove coverage.info '*test*' --output-file coverage.info
+    # generate report
+    COMMAND ${GENHTML} --demangle-cpp -o coverage coverage.info
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  )
+endif()
+
+add_executable(CodeCoverage
+  test/sample.cpp
+  src/Appointment.cpp
+  src/MyFileDatabase.cpp
+  src/MyApp.cpp
+  src/RouteController.cpp
+  test/AppointmentUnitTests.cpp
+  test/RouteControllerUnitTests.cpp
+)
+
+target_include_directories(CodeCoverage PRIVATE
+  ${INCLUDE_PATHS}
+  include
+)
+
+target_link_libraries(CodeCoverage PRIVATE
+  gtest
+  gtest_main
+)

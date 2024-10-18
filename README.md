@@ -31,7 +31,7 @@ This section describes the endpoints that the service provides, as well as their
 
 #### DELETE /deleteAppt
 * Expected Input Parameters: apptCode
-* Expected Output: 
+* Expected Output: "Appointment deleted successfully"
 * Upon Success: HTTP 200 Status Code is returned along with 
 "Appointment deleted successfully" in the response body
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
@@ -39,9 +39,26 @@ This section describes the endpoints that the service provides, as well as their
 #### GET /createAppt
 * Expected Input Parameters: title startTime endTime location
 * Expected Output: apptCode
-* Upon Success: HTTP 200 Status Code is returned along with 
-"Appointment Created : apptCode " and appointment code in the response body
-* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Exists :" and details of appointmentin the response body. 
+* Upon Success: HTTP 200 Status Code is returned along with appointment code in the response body
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Exists :" and details of appointment in the response body. 
+
+#### GET /updateApptTitle
+* Expected Input Parameters: apptCode apptTitle
+* Expected Output: "Appointment title successfully updated."
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment title successfully updated." in the response body.
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
+
+#### GET /updateApptLocation
+* Expected Input Parameters: apptCode apptLocation
+* Expected Output: "Appointment location successfully updated."
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment location successfully updated." in the response body.
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" in the response body. 
+
+#### GET /updateApptTimes
+* Expected Input Parameters: apptCode startTime endTime
+* Expected Output: "Appointment time successfully updated."
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment time successfully updated." in the response body.
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" or HTTP 400 Status Code is returned along with "Failed to update appointment time." in the response body. 
 
 #### PATCH /updateApptTitle
 * Expected Input Parameters: apptCode apptTitle
