@@ -69,12 +69,15 @@ For first iteration we have set up testfile.bin. On calling `IndividualMiniproje
 
 ## Style Checking Report
 The cpplint tool was used to check the style of the code.
+![Screenshot of a checkstyle with no errors](reports/cpplint_10_18.PNG)
 
 ## Branch Coverage Reporting
 The lcov tool was used to to perform branch analysis in order to see the branch coverage of the relevant code within the code base.
+![Screenshot of a code coverage report](reports/code_coverage_10_18.PNG)
 
 ## Static Code Analysis
 The cppcheck tool was used to perform static analysis on the codebase.
+![Screenshot of cppcheck analysis report](reports/cppcheck_10_18.PNG)
 
 ## Continuous Integration Report
 We are using GitHub Actions to perform continous integration. 
