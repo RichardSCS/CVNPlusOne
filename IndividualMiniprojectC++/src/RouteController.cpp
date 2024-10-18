@@ -60,6 +60,7 @@ void RouteController::updateAppointmentTitle(const crow::request& req, crow::res
             res.write("Appointment Not Found");
         } else {
             it->second.setTitle(apptTitle);
+            myFileDatabase->setApptMapping(appointmentMapping);
             res.code = 200;
             res.write("Appointment title successfully updated.");
         }
@@ -81,6 +82,7 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
             res.write("Appointment Not Found");
         } else {
             it->second.setLocation(apptLocation);
+            myFileDatabase->setApptMapping(appointmentMapping);
             res.code = 200;
             res.write("Appointment location successfully updated.");
         }
@@ -108,6 +110,7 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
             res.write("Appointment Not Found");
         } else {
             if (it->second.setTimes(startTime, endTime)) {
+                myFileDatabase->setApptMapping(appointmentMapping);
                 res.code = 200;
                 res.write("Appointment time successfully updated.");
             } else {
@@ -234,6 +237,10 @@ void RouteController::initRoutes(crow::App<>& app) {
     CROW_ROUTE(app, "/updateApptTimes")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
             updateAppointmentTime(req, res);
+        });
+    CROW_ROUTE(app, "/updateApptLocation")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
+            updateAppointmentLocation(req, res);
         });
 }
 

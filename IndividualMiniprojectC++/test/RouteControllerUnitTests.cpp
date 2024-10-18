@@ -176,3 +176,21 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleTestFail) {
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Appointment Not Found", response.body);
 }
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationTest) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT1&apptLocation=\"Doctor Office\""};
+    routeController.updateAppointmentLocation(request, response);
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Appointment location successfully updated.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationTestFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT133&apptLocation=\"Doctor Office\""};
+    routeController.updateAppointmentLocation(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment Not Found", response.body);
+}
