@@ -149,6 +149,7 @@ void RouteController::deleteAppointment(const crow::request& req, crow::response
 
         res.code = 200;
         res.write("Appointment deleted successfully");
+        res.end();
     } catch (const std::exception& e) {
         res = handleException(e);
     }
@@ -196,7 +197,7 @@ void RouteController::createAppointment(const crow::request& req, crow::response
 
         auto it = appointmentMapping.find(apptCode);
         if (it == appointmentMapping.end()) {
-            res.code = 200;
+            res.code = 201;
             res.write("Appointment Created : apptCode ");
             res.write(apptCode);
             Appointment appt(apptCode, title, startTime, endTime, location);
@@ -227,7 +228,7 @@ void RouteController::initRoutes(crow::App<>& app) {
         });
     
     CROW_ROUTE(app, "/createAppt")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
+        .methods(crow::HTTPMethod::PUT)([this](const crow::request& req, crow::response& res) {
             createAppointment(req, res);
         });
     CROW_ROUTE(app, "/updateApptTitle")
