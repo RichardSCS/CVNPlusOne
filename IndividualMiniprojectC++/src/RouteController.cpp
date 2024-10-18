@@ -197,7 +197,7 @@ void RouteController::createAppointment(const crow::request& req, crow::response
 
         auto it = appointmentMapping.find(apptCode);
         if (it == appointmentMapping.end()) {
-            res.code = 200;
+            res.code = 201;
             res.write("Appointment Created : apptCode ");
             res.write(apptCode);
             Appointment appt(apptCode, title, startTime, endTime, location);

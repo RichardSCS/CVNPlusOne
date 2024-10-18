@@ -39,8 +39,12 @@ This section describes the endpoints that the service provides, as well as their
 #### PUT /createAppt
 * Expected Input Parameters: title startTime endTime location
 * Expected Output: apptCode
-* Upon Success: HTTP 200 Status Code is returned along with appointment code in the response body
+* Upon Success: HTTP 201 Status Code is returned along with appointment code in the response body
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Exists :" and details of appointment in the response body. 
+* If title param is missing, HTTP 400 Status Code is returned along with "Missing appointment title" in the response body
+* If startTime is missing, HTTP 400 Status Code is returned along with "Missing appointment startTime" in the response body
+* If endTime is missing, HTTP 400 Status Code is returned along with "Missing appointment endTime" in the response body
+* If location is missing, HTTP 400 Status Code is returned along with "Missing appointment location" in the response body
 
 #### PATCH /updateApptTitle
 * Expected Input Parameters: apptCode apptTitle
