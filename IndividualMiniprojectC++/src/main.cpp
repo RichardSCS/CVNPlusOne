@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 #include <csignal>
-#include "../external_libraries/Crow-1.2.0-Darwin/include/crow.h"
 #include "Globals.h"
 #include "MyApp.h"
 #include "Appointment.h"

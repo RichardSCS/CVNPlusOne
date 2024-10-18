@@ -11,7 +11,7 @@
  * @param flag     used to distinguish mode of database
  * @param filePath the path to the file containing the entries of the database
  */
-MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : filePath(filePath) {
+MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : m_filePath(filePath) {
     Appointment appt1("APPT1", "Doctor Appointment", 1730383200, 1730386800, "Clinic");
     std::map<std::string, Appointment> apptMapping;
     apptMapping["APPT1"] = appt1;
@@ -19,11 +19,11 @@ MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : filePath
 }
 
 void MyFileDatabase::setApptMapping(const std::map<std::string, Appointment>& mapping) {
-    appointmentMapping = mapping;
+    m_appointmentMapping = mapping;
 }
 
 std::map<std::string, Appointment> MyFileDatabase::getAppointmentMapping() const {
-    return appointmentMapping;
+    return m_appointmentMapping;
 }
 
 
