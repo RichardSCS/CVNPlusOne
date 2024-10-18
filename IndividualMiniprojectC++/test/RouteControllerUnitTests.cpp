@@ -33,7 +33,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {
     request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&location=Pharmacy"};
     routeController.createAppointment(request, response);
     ASSERT_EQ(200, response.code);
-    ASSERT_EQ("Appointment Created : apptCode APPT2", response.body);
+    ASSERT_EQ("Appointment Created : apptCode APPT4", response.body);
 }
 
 TEST_F(RouteControllerUnitTests, DeleteAppointmentSuccess) {

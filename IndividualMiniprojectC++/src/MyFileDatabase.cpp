@@ -59,12 +59,15 @@ void MyFileDatabase::saveContentsToFile() const {
 }
 
 /**
- * Deserializes the object from the file and returns the department mapping.
+ * Deserializes the object from the file and returns the appointment mapping.
  *
- * @return the deserialized department mapping
+ * @return the deserialized appointment mapping
  */
 void MyFileDatabase::deSerializeObjectFromFile() {
     std::ifstream inFile(filePath, std::ios::binary);
+    std::map<std::string, Appointment> apptMapping;
+    setApptMapping(apptMapping);
+
     size_t mapSize;
     inFile.read(reinterpret_cast<char*>(&mapSize), sizeof(mapSize));
     for (size_t i = 0; i < mapSize; ++i) {
@@ -87,7 +90,7 @@ void MyFileDatabase::deSerializeObjectFromFile() {
 std::string MyFileDatabase::display() const {
     std::string result;
     for (const auto& it : appointmentMapping) {
-        result += "For the " + it.first + " department:\n" + it.second.display() + "\n";
+        result += "For the " + it.first + " appointment:\n" + it.second.display() + "\n";
     }
     return result;
 }
