@@ -41,6 +41,12 @@ jobs:
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: tar -xvf boost_1_86_0.tar.gz
           
+    - name: Install cpplint
+      run: pip install cpplint
+
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
     #- name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -66,15 +72,9 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ./IndividualMiniprojectTests
 
-    - name: Install cpplint
-      run: pip install cpplint
-
     - name: cpplint
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: make cpplint
-
-    - name: Install cppcheck
-      run: sudo apt-get install cppcheck
 
     - name: cppcheck
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
