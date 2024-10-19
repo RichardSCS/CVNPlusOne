@@ -91,7 +91,7 @@ if (CPPLINT)
     # Custom target to run cpplint
     add_custom_target(
         cpplint
-        COMMAND ${CPPLINT} --filter=-whitespace,-build/include_what_you_use ${SOURCE_FILES}
+        COMMAND ${CPPLINT} --filter=-whitespace,-build/include_what_you_use,-build/include_subdir ${SOURCE_FILES}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running cpplint for Google C++ Style Guide compliance"
     )
@@ -114,7 +114,7 @@ if (ENABLE_COVERAGE)
     COMMAND ${LCOV} --directory . --capture --output-file coverage.info
     # exclude header files
     COMMAND ${LCOV} --remove coverage.info '/usr/*' '*_deps/*' '*crow*' --output-file coverage.info
-    COMMAND ${LCOV} --remove coverage.info '*test*' --output-file coverage.info
+    COMMAND ${LCOV} --remove coverage.info '*test*' '*main.cpp' --output-file coverage.info
     # generate report
     COMMAND ${GENHTML} --demangle-cpp -o coverage coverage.info
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -129,6 +129,8 @@ add_executable(CodeCoverage
   src/RouteController.cpp
   test/AppointmentUnitTests.cpp
   test/RouteControllerUnitTests.cpp
+  test/MyFileDatabaseUnitTests.cpp
+  test/MyAppUnitTests.cpp
 )
 
 target_include_directories(CodeCoverage PRIVATE
@@ -139,4 +141,11 @@ target_include_directories(CodeCoverage PRIVATE
 target_link_libraries(CodeCoverage PRIVATE
   gtest
   gtest_main
+)
+
+find_program(CPPCHECK cppcheck)
+add_custom_target(
+  cppcheck
+  #COMMAND ${CPPCHECK} -I ../include/ --enable=all --library=posix --suppress=missingInclude --suppress=missingIncludeSystem --suppress=checkersReport --suppress=unusedFunction ../src/ ../test/ -i../external_libraries/
+  COMMAND ${CPPCHECK} -I../include/ --enable=all --suppress=unusedFunction --suppress=missingInclude --suppress=missingIncludeSystem --suppress=checkersReport ../src/ ../test/
 )

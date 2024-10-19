@@ -8,7 +8,7 @@
 #include "Globals.h"
 #include "MyFileDatabase.h"
 #include "Appointment.h"
-#include "../external_libraries/Crow-1.2.0-Darwin/include/crow.h"
+#include "crow.h"
 
 int apptCodeCounter = 4;
 
@@ -17,6 +17,8 @@ crow::response handleException(const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return crow::response{500, "An error has occurred"};
 }
+
+RouteController::RouteController() : myFileDatabase(nullptr) {}
 
 /**
  * Redirects to the homepage.

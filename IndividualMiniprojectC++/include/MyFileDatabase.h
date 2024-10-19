@@ -18,9 +18,9 @@ class MyFileDatabase {
         bool removeAppointment(const std::string& apptCode);
 
     private:
-        std::string filePath;
+        std::string m_filePath;
 
-        std::map<std::string, Appointment> appointmentMapping;
+        std::map<std::string, Appointment> m_appointmentMapping;
 };
 
 #endif

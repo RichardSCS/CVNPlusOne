@@ -11,18 +11,18 @@
  * @param flag     used to distinguish mode of database
  * @param filePath the path to the file containing the entries of the database
  */
-MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : filePath(filePath) {
+MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : m_filePath(filePath) {
     if (flag == 0) {
         deSerializeObjectFromFile();
     }
 }
 
 void MyFileDatabase::setApptMapping(const std::map<std::string, Appointment>& mapping) {
-    appointmentMapping = mapping;
+    m_appointmentMapping = mapping;
 }
 
 std::map<std::string, Appointment> MyFileDatabase::getAppointmentMapping() const {
-    return appointmentMapping;
+    return m_appointmentMapping;
 }
 
 
@@ -46,10 +46,10 @@ bool MyFileDatabase::removeAppointment(const std::string& apptCode) {
  * overwritten with this operation.
  */
 void MyFileDatabase::saveContentsToFile() const {
-    std::ofstream outFile(filePath, std::ios::binary);
-    size_t mapSize = appointmentMapping.size();
+    std::ofstream outFile(m_filePath, std::ios::binary);
+    size_t mapSize = m_appointmentMapping.size();
     outFile.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
-    for (const auto& it : appointmentMapping) {
+    for (const auto& it : m_appointmentMapping) {
         size_t keyLen = it.first.length();
         outFile.write(reinterpret_cast<const char*>(&keyLen), sizeof(keyLen));
         outFile.write(it.first.c_str(), keyLen);
@@ -64,7 +64,7 @@ void MyFileDatabase::saveContentsToFile() const {
  * @return the deserialized appointment mapping
  */
 void MyFileDatabase::deSerializeObjectFromFile() {
-    std::ifstream inFile(filePath, std::ios::binary);
+    std::ifstream inFile(m_filePath, std::ios::binary);
     std::map<std::string, Appointment> apptMapping;
     setApptMapping(apptMapping);
 
@@ -77,7 +77,7 @@ void MyFileDatabase::deSerializeObjectFromFile() {
         inFile.read(&key[0], keyLen);
         Appointment appt; 
         appt.deserialize(inFile);
-        appointmentMapping[key] = appt;
+        m_appointmentMapping[key] = appt;
     }
     inFile.close();
 }
@@ -89,7 +89,7 @@ void MyFileDatabase::deSerializeObjectFromFile() {
  */
 std::string MyFileDatabase::display() const {
     std::string result;
-    for (const auto& it : appointmentMapping) {
+    for (const auto& it : m_appointmentMapping) {
         result += "For the " + it.first + " appointment:\n" + it.second.display() + "\n";
     }
     return result;
