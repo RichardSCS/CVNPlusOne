@@ -12,10 +12,9 @@
  * @param filePath the path to the file containing the entries of the database
  */
 MyFileDatabase::MyFileDatabase(int flag, const std::string& filePath) : m_filePath(filePath) {
-    Appointment appt1("APPT1", "Doctor Appointment", 1730383200, 1730386800, "Clinic");
-    std::map<std::string, Appointment> apptMapping;
-    apptMapping["APPT1"] = appt1;
-    setApptMapping(apptMapping);
+    if (flag == 0) {
+        deSerializeObjectFromFile();
+    }
 }
 
 void MyFileDatabase::setApptMapping(const std::map<std::string, Appointment>& mapping) {
@@ -40,4 +39,58 @@ bool MyFileDatabase::removeAppointment(const std::string& apptCode) {
     setApptMapping(appointmentMapping);
 
     return true;
+}
+
+/**
+ * Saves the contents of the internal data structure to the file. Contents of the file are
+ * overwritten with this operation.
+ */
+void MyFileDatabase::saveContentsToFile() const {
+    std::ofstream outFile(filePath, std::ios::binary);
+    size_t mapSize = appointmentMapping.size();
+    outFile.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
+    for (const auto& it : appointmentMapping) {
+        size_t keyLen = it.first.length();
+        outFile.write(reinterpret_cast<const char*>(&keyLen), sizeof(keyLen));
+        outFile.write(it.first.c_str(), keyLen);
+        it.second.serialize(outFile);
+    }
+    outFile.close();
+}
+
+/**
+ * Deserializes the object from the file and returns the appointment mapping.
+ *
+ * @return the deserialized appointment mapping
+ */
+void MyFileDatabase::deSerializeObjectFromFile() {
+    std::ifstream inFile(filePath, std::ios::binary);
+    std::map<std::string, Appointment> apptMapping;
+    setApptMapping(apptMapping);
+
+    size_t mapSize;
+    inFile.read(reinterpret_cast<char*>(&mapSize), sizeof(mapSize));
+    for (size_t i = 0; i < mapSize; ++i) {
+        size_t keyLen;
+        inFile.read(reinterpret_cast<char*>(&keyLen), sizeof(keyLen));
+        std::string key(keyLen, ' ');
+        inFile.read(&key[0], keyLen);
+        Appointment appt; 
+        appt.deserialize(inFile);
+        appointmentMapping[key] = appt;
+    }
+    inFile.close();
+}
+
+/**
+ * Returns a string representation of the database.
+ *
+ * @return a string representation of the database
+ */
+std::string MyFileDatabase::display() const {
+    std::string result;
+    for (const auto& it : appointmentMapping) {
+        result += "For the " + it.first + " appointment:\n" + it.second.display() + "\n";
+    }
+    return result;
 }
