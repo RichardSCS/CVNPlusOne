@@ -44,9 +44,9 @@ void MyApp::setupDatabase() {
 }
 
 void MyApp::resetDataFile() {
-    time_t times[] = {1730383200, 1730386800, 1730383500, 1730387800, 1730383700, 1730389800};
-    std::string types[] = {"Doctor Appointment", "Diagnostic Test", "Prescription Refill"};
-    std::string locations[] = {"Clinic", "Hospital", "Pharmacy"};
+    const time_t times[] = {1730383200, 1730386800, 1730383500, 1730387800, 1730383700, 1730389800};
+    const std::string types[] = {"Doctor Appointment", "Diagnostic Test", "Prescription Refill"};
+    const std::string locations[] = {"Clinic", "Hospital", "Pharmacy"};
 
     Appointment appt1("APPT1", types[0], times[0], times[1], locations[0]);
 
