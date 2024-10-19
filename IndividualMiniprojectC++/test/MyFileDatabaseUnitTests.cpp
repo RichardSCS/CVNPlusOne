@@ -4,12 +4,15 @@
 
 #include <gtest/gtest.h>
 #include "MyFileDatabase.h" 
+#include "MyApp.h"
 
 class MyFileDatabaseUnitTests : public ::testing::Test {
 protected:
     static MyFileDatabase* testMyFileDatabase;
 
     static void SetUpTestSuite() {
+        MyApp::run("setup");
+        MyApp::onTermination();
         system("cp testfile.bin unittestfile.bin");
         testMyFileDatabase = new MyFileDatabase(0, "unittestfile.bin");
     }
