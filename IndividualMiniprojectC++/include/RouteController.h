@@ -21,6 +21,10 @@ class RouteController {
         void updateAppointmentTime(const crow::request& req, crow::response& res);
         void updateAppointmentTitle(const crow::request& req, crow::response& res);
         void updateAppointmentLocation(const crow::request& req, crow::response& res);
+
+    protected:
+        bool isStrEmpty(const std::string& value, crow::response& res);
+        void toUpper(std::string& string);
 };
 
 #endif 

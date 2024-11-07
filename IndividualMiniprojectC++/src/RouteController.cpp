@@ -9,6 +9,7 @@
 #include "MyFileDatabase.h"
 #include "Appointment.h"
 #include "crow.h"
+#include "regex"
 
 int apptCodeCounter = 4;
 
@@ -16,6 +17,21 @@ int apptCodeCounter = 4;
 crow::response handleException(const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return crow::response{500, "An error has occurred"};
+}
+
+bool RouteController::isStrEmpty(const std::string& value, crow::response& res) {
+    std::regex re_empty("^\\s*$");
+    if (std::regex_match(value, re_empty)) {
+        res.code = 400;
+        res.write("Empty query string value not allowed.");
+        return true;
+    }
+    return false;
+}
+
+void RouteController::toUpper(std::string& string) {
+    std::transform(string.cbegin(), string.cend(), string.begin(),
+                    [](auto c) { return toupper(c); });
 }
 
 RouteController::RouteController() : myFileDatabase(nullptr) {}
@@ -33,7 +49,12 @@ void RouteController::index(crow::response& res) {
 
 void RouteController::retrieveAppointment(const crow::request& req, crow::response& res) {
     try {
-        auto apptCode = req.url_params.get("apptCode");
+        std::string apptCode = req.url_params.get("apptCode");
+        if (isStrEmpty(apptCode, res)) {
+            res.end();
+            return;
+        }
+        toUpper(apptCode);
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
