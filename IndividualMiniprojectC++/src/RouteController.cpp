@@ -149,13 +149,14 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
 
 void RouteController::deleteAppointment(const crow::request& req, crow::response& res) {
     try {
-        auto apptCode = req.url_params.get("apptCode");
-        if (!apptCode) {
-            res.code = 400; 
-            res.write("Missing appointment code");
+        std::string apptCode = req.url_params.get("apptCode");
+
+        if (isStrEmpty(apptCode, res)) {
             res.end();
             return;
         }
+
+        toUpper(apptCode);
 
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
         auto it = appointmentMapping.find(apptCode);

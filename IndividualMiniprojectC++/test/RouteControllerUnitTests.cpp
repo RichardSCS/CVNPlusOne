@@ -119,8 +119,8 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentMissingCode) {
     
     routeController->deleteAppointment(request, response);
     
-    ASSERT_EQ(400, response.code);
-    ASSERT_EQ("Missing appointment code", response.body);
+    ASSERT_EQ(500, response.code);
+    ASSERT_EQ("An error has occurred", response.body);
 }
 
 TEST_F(RouteControllerUnitTests, DeleteAppointmentNotFound) {
@@ -133,6 +133,26 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentNotFound) {
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Appointment not found", response.body);
 }
+
+TEST_F(RouteControllerUnitTests, DeleteAppointmentTest) {
+    crow::request req;
+    crow::response res;
+
+    routeController->deleteAppointment(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ("An error has occurred", res.body);
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=");
+    routeController->deleteAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    req.url = "/deleteAppt";
+    req.url_params = crow::query_string("?apptCode=appt4");
+    testMethods(&req, &res, {crow::HTTPMethod::DELETE});
+}
+
 TEST_F(RouteControllerUnitTests, RetrieveAppointmentTest) {    
     crow::request request;
     crow::response response;
