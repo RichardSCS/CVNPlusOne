@@ -37,7 +37,11 @@ protected:
             if (std::any_of(acceptableMethods.begin(), acceptableMethods.end(),
             [method](crow::HTTPMethod acceptableMethod)
             { return method == acceptableMethod; })) {
-                ASSERT_EQ(res->code, 200);
+                if (method == crow::HTTPMethod::POST) {
+                    ASSERT_EQ(res->code, 201);
+                } else {
+                    ASSERT_EQ(res->code, 200);
+                }
             } else {
                 ASSERT_EQ(res->code, 405);
             }
@@ -94,8 +98,62 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentMissingLocation) {
     crow::response response;
     request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800"};
     routeController->createAppointment(request, response);
-    ASSERT_EQ(400, response.code);
-    ASSERT_EQ("Missing appointment location", response.body);
+    ASSERT_EQ(201, response.code);
+    ASSERT_EQ("Appointment Created : apptCode APPT5", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, CreateAppointmentEmptyValues) {
+    crow::request req;
+    crow::response res;
+
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ("Missing appointment title", res.body);
+
+    res.clear();
+    req.url_params = crow::query_string("?title=");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&startTime=notanumber");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Time value must be a whole number.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&startTime=");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&startTime=11111&endTime=");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&startTime=11111&endTime=notanumber");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Time value must be a whole number.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&startTime=111&endTime=11");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "End time cannot be before Start time.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=Office&startTime=10&endTime=10");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 201);
+    ASSERT_EQ(res.body, "Appointment Created : apptCode APPT6");
+
+    req.url = "/createAppt";
+    testMethods(&req, &res, {crow::HTTPMethod::POST});
 }
 
 TEST_F(RouteControllerUnitTests, DeleteAppointmentSuccess) {

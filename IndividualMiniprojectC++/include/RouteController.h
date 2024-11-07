@@ -24,6 +24,7 @@ class RouteController {
 
     protected:
         bool isStrEmpty(const std::string& value, crow::response& res);
+        bool verifyTimeStr(const std::string& value, crow::response& res);
         void toUpper(std::string& string);
 };
 
