@@ -249,7 +249,7 @@ void RouteController::createAppointment(const crow::request& req, crow::response
         auto location = req.url_params.get("location");
         if (!location) {
             freeChar = true;
-            location = (char*)malloc(1);
+            location = reinterpret_cast<char*>(malloc(1));
             location[0] = '\0';
         }
 
@@ -272,7 +272,7 @@ void RouteController::createAppointment(const crow::request& req, crow::response
         }
         if (freeChar)
             free(location);
-            
+
         res.end();
     } catch (const std::exception& e) {
         res = handleException(e);
