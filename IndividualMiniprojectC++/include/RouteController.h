@@ -21,6 +21,7 @@ class RouteController {
         void updateAppointmentTime(const crow::request& req, crow::response& res);
         void updateAppointmentTitle(const crow::request& req, crow::response& res);
         void updateAppointmentLocation(const crow::request& req, crow::response& res);
+        void listAppointments(const crow::request& req, crow::response& res);
 };
 
 #endif 
