@@ -27,6 +27,10 @@ const std::string& Appointment::getApptTitle() const {
     return title;
 }
 
+const std::string& Appointment::getApptCode() const {
+    return code;
+}
+
 const time_t Appointment::getApptStartTime() const {
     return startTime;
 }
