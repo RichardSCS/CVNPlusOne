@@ -12,6 +12,7 @@ add_executable(IndividualMiniproject
     src/main.cpp 
     src/Appointment.cpp
     src/MyFileDatabase.cpp 
+    src/ApptDatabase.cpp
     src/RouteController.cpp
     src/MyApp.cpp
     src/Globals.cpp
@@ -36,6 +37,7 @@ target_include_directories(IndividualMiniproject PUBLIC
 target_link_libraries(IndividualMiniproject PRIVATE 
     gtest 
     gtest_main
+    mysqlcppconn
 )
 
 enable_testing()
@@ -49,6 +51,7 @@ add_executable(IndividualMiniprojectTests
   src/MyFileDatabase.cpp
   src/MyApp.cpp
   src/RouteController.cpp
+  src/ApptDatabase.cpp
   test/AppointmentUnitTests.cpp
   test/RouteControllerUnitTests.cpp
   test/MyFileDatabaseUnitTests.cpp
@@ -64,6 +67,7 @@ target_include_directories(IndividualMiniprojectTests PRIVATE
 target_link_libraries(IndividualMiniprojectTests PRIVATE 
     gtest 
     gtest_main
+    mysqlcppconn
 )
 
 include(GoogleTest)
@@ -81,6 +85,7 @@ if (CPPLINT)
         src/MyApp.cpp
         src/Globals.cpp
         src/Appointment.cpp
+        src/ApptDatabase.cpp
         test/sample.cpp
         test/AppointmentUnitTests.cpp
         test/RouteControllerUnitTests.cpp
@@ -127,6 +132,7 @@ add_executable(CodeCoverage
   src/MyFileDatabase.cpp
   src/MyApp.cpp
   src/RouteController.cpp
+  src/ApptDatabase.cpp
   test/AppointmentUnitTests.cpp
   test/RouteControllerUnitTests.cpp
   test/MyFileDatabaseUnitTests.cpp
@@ -141,6 +147,7 @@ target_include_directories(CodeCoverage PRIVATE
 target_link_libraries(CodeCoverage PRIVATE
   gtest
   gtest_main
+  mysqlcppconn
 )
 
 find_program(CPPCHECK cppcheck)

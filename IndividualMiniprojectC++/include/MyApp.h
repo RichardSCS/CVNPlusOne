@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "MyFileDatabase.h"
+#include "ApptDatabase.h"
 
 class MyApp {
     public:
@@ -11,12 +12,14 @@ class MyApp {
         static void onTermination();
         static void overrideDatabase(MyFileDatabase* testData);
         static MyFileDatabase* getDatabase();
+        static ApptDatabase* getApptDatabase();
 
     private:
         static void setupDatabase();
         static void resetDataFile();
 
         static MyFileDatabase* myFileDatabase;
+        static ApptDatabase* apptDatabase;
         static bool saveData;
 };
 
