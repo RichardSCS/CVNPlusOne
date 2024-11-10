@@ -94,6 +94,32 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
     }
 }
 
+void RouteController::listAppointments(const crow::request& req, crow::response& res) {
+    try {
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+        
+        std::string appointmentList = "[";
+        bool first = true;
+
+        for (const auto& appt : appointmentMapping) {
+            if (!first) {
+                appointmentList += ", ";
+            }
+            appointmentList += "\"" + appt.first + "\"";
+            first = false;
+        }
+
+        appointmentList += "]";
+
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.write(appointmentList);
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
 void RouteController::updateAppointmentTime(const crow::request& req, crow::response& res) {
     try {
         auto apptCode = req.url_params.get("apptCode");
@@ -244,6 +270,10 @@ void RouteController::initRoutes(crow::App<>& app) {
     CROW_ROUTE(app, "/updateApptLocation")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
             updateAppointmentLocation(req, res);
+        });
+    CROW_ROUTE(app, "/listAppts")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {
+            listAppointments(req, res);
         });
 }
 
