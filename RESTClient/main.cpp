@@ -5,6 +5,7 @@
 #include <string>
 #include <csignal>
 #include "restclient-cpp/restclient.h"
+#include "PatientClient.h"
 
 /**
  *  Method to handle proper termination protocols 
@@ -18,27 +19,70 @@ void signalHandler(int signal) {
 }
 */
 
+void showMenu() {
+    std::cout << "=================\n";
+    std::cout << "Select an option:\n";
+    std::cout << "1. Get all appointment codes\n";
+    std::cout << "2. Get details for a specific appointment\n";
+    std::cout << "3. Get details for all appointments\n";
+    std::cout << "4. Exit\n";
+}
+
 /**
  *  Sets up the HTTP client and runs the program 
  */
 int main(int argc, char* argv[]) {
-    std::string mode = argc > 1 ? argv[1] : "run";
-    //MyApp::run(mode);
+     std::string baseUrl;
 
-    RestClient::Response r1 = RestClient::get("http://127.0.0.1:8080/retrieveAppt?apptCode=APPT1");
-    std::cout<<r1.code<<std::endl;
-    std::cout<<r1.body<<std::endl;
-    std::cout<<std::endl;
+    std::cout << "Enter the base URL (default: http://127.0.0.1:8080): ";
+    std::getline(std::cin, baseUrl);
 
-    RestClient::Response r2 = RestClient::get("http://127.0.0.1:8080/retrieveAppt?apptCode=APPT2");
-    std::cout<<r2.code<<std::endl;
-    std::cout<<r2.body<<std::endl;
-    std::cout<<std::endl;
+    if (baseUrl.empty()) {
+        baseUrl = "http://127.0.0.1:8080";
+        std::cout << "Using local base URL http://127.0.0.1:8080\n\n";
+    }
 
-    RestClient::Response r3 = RestClient::get("http://127.0.0.1:8080/retrieveAppt?apptCode=APPT3");
-    std::cout<<r3.code<<std::endl;
-    std::cout<<r3.body<<std::endl;
-    std::cout<<std::endl;
+    PatientClient client(baseUrl);
+    int choice;
+    std::string apptCode;
+
+    while (true) {
+        showMenu();
+        std::cout << "Enter your choice: ";
+
+        while (true) {
+            std::cin >> choice;
+            if (std::cin.fail()) {
+                std::cout << "Invalid option, please try again\n";
+            
+                std::cin.clear();
+                // Ignore rest of the input line https://stackoverflow.com/questions/63953373/how-to-ignore-the-rest-of-the-line
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            } else {
+                break;
+            }
+        } 
+    
+        switch (choice) {
+            case 1:
+                client.displayAllAppointmentCodes();
+                break;
+            case 2:
+                std::cout << "Enter appointment code: ";
+                std::cin >> apptCode;
+                client.displayAppointmentDetail(apptCode);
+                break;
+            case 3:
+                client.displayAllAppointmentDetails();
+                break;
+            case 4:
+                std::cout << "Exiting program\n";
+                return 0;
+            default:
+                std::cout << "Invalid option. Please try again\n";
+                break;
+        }
+    }
 
     return 0;
 }

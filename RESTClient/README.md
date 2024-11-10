@@ -2,13 +2,30 @@ This is a basic REST Client.
 
 It uses the restclient-cpp library for REST API calls to the Server.
 
-Install the librestclient-cpp:
-In Macos:
-brew tap mrtazz/oss
-brew install restclient-cpp
+Install the required libraries:
+    librestclient-cpp:
+        In Macos:
+        brew tap mrtazz/oss
+        brew install restclient-cpp
 
-In Ubuntu:
-https://packagecloud.io/mrtazz/restclient-cpp
+        In Ubuntu:
+        https://packagecloud.io/mrtazz/restclient-cpp
+    jsoncpp:
+        In Macos:
+        brew install jsoncpp
+
+        In Ubuntu:
+        sudo apt install libjsoncpp-dev
+
+Build:
+    cd build
+    cmake ..
+    make
+
+Run client:
+    Have server app running and start client 
+    In RESTClient/build, ./PatientClient
+    
 
 Client files:
 -------------
