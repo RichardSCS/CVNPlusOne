@@ -6,6 +6,7 @@
 class PatientClient {
     private:
         std::string baseUrl;
+        std::vector<std::string> createdAppointments;
     public:
         PatientClient(const std::string& baseUrl);
         
@@ -16,6 +17,7 @@ class PatientClient {
         void displayAppointmentDetails();
         void displayAppointmentDetail(const std::string& code);
         std::string deleteAppointment(const std::string& code);
+        std::string createAppointment(const std::string& title, int startTime, int endTime, const std::string& location);
 };
 
 #endif
