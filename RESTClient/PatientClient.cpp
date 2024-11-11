@@ -63,3 +63,14 @@ void PatientClient::displayAllAppointmentDetails() {
 void PatientClient::displayAppointmentDetail(const std::string& code) {
     std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
 }
+
+std::string PatientClient::deleteAppointment(const std::string& code) {
+    RestClient::Response response = RestClient::get(baseUrl + "/deleteAppt?apptCode=" + code);
+    if (response.code == 200) {
+        return response.body;
+    } else {
+        std::cerr << "Failed to delete appoitment " << code << ". HTTP code: " << response.code << "\n";
+        return "Appointment Not Found";
+    }
+}
+

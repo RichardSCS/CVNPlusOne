@@ -1,4 +1,4 @@
-This is a basic REST Client. 
+This is REST Client for the Patient. The Patient client views and deletes appointments which have been added by the Provider/Doctor. 
 
 It uses the restclient-cpp library for REST API calls to the Server.
 

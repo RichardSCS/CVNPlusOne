@@ -25,7 +25,8 @@ void showMenu() {
     std::cout << "1. Get all appointment codes\n";
     std::cout << "2. Get details for a specific appointment\n";
     std::cout << "3. Get details for all appointments\n";
-    std::cout << "4. Exit\n";
+    std::cout << "4. Delete an appointment\n";
+    std::cout << "5. Exit\n";
 }
 
 /**
@@ -76,6 +77,11 @@ int main(int argc, char* argv[]) {
                 client.displayAllAppointmentDetails();
                 break;
             case 4:
+                std::cout << "Enter appointment code: ";
+                std::cin >> apptCode;
+                client.deleteAppointment(apptCode);
+                break;
+            case 5:
                 std::cout << "Exiting program\n";
                 return 0;
             default:

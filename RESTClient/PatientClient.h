@@ -15,6 +15,7 @@ class PatientClient {
         void displayAllAppointmentDetails();
         void displayAppointmentDetails();
         void displayAppointmentDetail(const std::string& code);
+        std::string deleteAppointment(const std::string& code);
 };
 
 #endif
