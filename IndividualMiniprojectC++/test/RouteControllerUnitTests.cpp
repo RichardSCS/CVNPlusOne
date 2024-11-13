@@ -14,6 +14,7 @@ protected:
         routeController.initRoutes(app);
         myApp->run("setup");
         routeController.setDatabase(myApp->getDatabase());
+        routeController.setApptDatabase(myApp->getApptDatabase());
     }
 
     static void SetUpTestSuite() {
