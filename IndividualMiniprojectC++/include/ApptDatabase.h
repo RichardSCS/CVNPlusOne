@@ -1,9 +1,9 @@
 #include "Appointment.h"
 #include "MyFileDatabase.h"
-#include "mysql-cppconn-8/jdbc/cppconn/driver.h"
-#include "mysql-cppconn-8/jdbc/cppconn/exception.h"
-#include "mysql-cppconn-8/jdbc/cppconn/resultset.h"
-#include "mysql-cppconn-8/jdbc/cppconn/statement.h"
+#include "cppconn/driver.h"
+#include "cppconn/exception.h"
+#include "cppconn/resultset.h"
+#include "cppconn/statement.h"
 #include <map>
 #include <string>
 
