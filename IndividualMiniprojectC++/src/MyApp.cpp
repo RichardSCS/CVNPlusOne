@@ -13,6 +13,7 @@ void MyApp::run(const std::string& mode) {
     if (mode == "setup") {
         setupDatabase();
         std::cout << "System Setup" << std::endl;
+        apptDatabase = new ApptDatabase("database.txt");
         return;
     }
     myFileDatabase = new MyFileDatabase(0, "testfile.bin");

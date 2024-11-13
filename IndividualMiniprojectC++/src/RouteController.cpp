@@ -296,7 +296,7 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             Appointment appt(apptCode, title, startTime, endTime, location);
             appointmentMapping[apptCode] = appt;
             myFileDatabase->setApptMapping(appointmentMapping);
-            apptDatabase->saveApptToDatabase(it->second);
+            apptDatabase->saveApptToDatabase(appt);
         } else {
             res.code = 404;
             res.write("Appointment Exists : ");

@@ -34,7 +34,7 @@ bool ApptDatabase::executeQuery(std::string sql_query) {
         delete connection;
     } catch (sql::SQLException &e) {
         // std::cerr << "Error: " << e.what() << std::endl;
-        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        // std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
         // std::cerr << "SQLState: " << e.getSQLState() << std::endl;
         return false;
     }
@@ -83,7 +83,7 @@ void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
 
             Appointment appt(id, title, std::stoi(start_time), std::stoi(end_time), location);
             appointmentMapping[id] = appt;
-            std::cout << "Loading Appt [" << id << "] from database" << std::endl;
+            //std::cout << "Loading Appt [" << id << "] from database" << std::endl;
             myFileDatabase->setApptMapping(appointmentMapping);
         }
         delete stmt;
@@ -91,7 +91,7 @@ void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
         delete result;
     } catch (sql::SQLException &e) {
         // std::cerr << "Error: " << e.what() << std::endl;
-        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        // std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
         // std::cerr << "SQLState: " << e.getSQLState() << std::endl;
     }
 }

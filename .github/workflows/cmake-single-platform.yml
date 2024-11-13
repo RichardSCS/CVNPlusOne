@@ -25,6 +25,9 @@ jobs:
     - name: Install ASIO
       run: sudo apt-get install libasio-dev
 
+    - name: Install MySQL C++ Connection
+      run: sudo apt-get install libmysqlcppconn-dev
+
     - name: Get Crow
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: wget https://github.com/CrowCpp/Crow/releases/download/v1.2.0/Crow-1.2.0.zip
