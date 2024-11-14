@@ -12,7 +12,7 @@
 
 class ApptDatabase {
     public:
-        ApptDatabase(const std::string& filePath);
+        explicit ApptDatabase(const std::string& filePath);
 
         void loadContentsFromDatabase(MyFileDatabase* myFileDatabase);
         void saveApptToDatabase(const Appointment& appt);

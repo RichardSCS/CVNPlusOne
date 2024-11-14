@@ -15,7 +15,7 @@ class Appointment {
         void setEndTime(const time_t newEndTime);
     
     public:
-        Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location);
+        Appointment(const std::string& code, const std::string& title, time_t startTime, time_t endTime, const std::string& location);
         Appointment();
 
         void serialize(std::ostream& out) const;
