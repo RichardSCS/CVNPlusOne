@@ -19,6 +19,7 @@ void MyApp::run(const std::string& mode) {
     myFileDatabase = new MyFileDatabase(0, "testfile.bin");
     apptDatabase = new ApptDatabase("database.txt");
     std::cout << "Start up" << std::endl;
+    apptDatabase->saveContentsToDatabase(myFileDatabase->getAppointmentMapping());
     apptDatabase->loadContentsFromDatabase(myFileDatabase);
 }
 

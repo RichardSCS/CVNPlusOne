@@ -178,7 +178,7 @@ void RouteController::deleteAppointment(const crow::request& req, crow::response
 
         appointmentMapping.erase(it);
         myFileDatabase->removeAppointment(apptCode);
-        apptDatabase->deleteApptFromDatabase(it->second.getApptCode());
+        apptDatabase->deleteApptFromDatabase(apptCode);
 
         res.code = 200;
         res.write("Appointment deleted successfully");
