@@ -14,7 +14,7 @@
  * @param endTime       The end time of the appointment.
  * @param location      The location of the appointment.
  */
-Appointment::Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location)
+Appointment::Appointment(const std::string& code, const std::string& title, time_t startTime, time_t endTime, const std::string& location)
     : code(code), title(title), startTime(startTime), endTime(endTime), location(location) {}
 
 /**
