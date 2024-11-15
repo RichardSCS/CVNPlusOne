@@ -91,7 +91,7 @@ if (CPPLINT)
     # Custom target to run cpplint
     add_custom_target(
         cpplint
-        COMMAND ${CPPLINT} --filter=-whitespace,-build/include_what_you_use,-build/include_subdir ${SOURCE_FILES}
+        COMMAND ${CPPLINT} --filter=-whitespace,-build/include_what_you_use,-build/include_subdir,-build/c++11 ${SOURCE_FILES}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running cpplint for Google C++ Style Guide compliance"
     )

@@ -9,6 +9,7 @@
 #include "MyFileDatabase.h"
 #include "Appointment.h"
 #include "crow.h"
+#include "regex"
 
 int apptCodeCounter = 4;
 
@@ -16,6 +17,34 @@ int apptCodeCounter = 4;
 crow::response handleException(const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return crow::response{500, "An error has occurred"};
+}
+
+bool RouteController::isStrEmpty(const std::string& value, crow::response& res) {
+    std::regex re_empty("^\\s*$");
+    if (std::regex_match(value, re_empty)) {
+        res.code = 400;
+        res.write("Empty query string value not allowed.");
+        return true;
+    }
+    return false;
+}
+
+bool RouteController::verifyTimeStr(const std::string& value, crow::response& res) {
+    if (isStrEmpty(value, res))
+        return false;
+
+    std::regex time("^\\d+$");
+    if (!std::regex_match(value, time)) {
+        res.code = 400;
+        res.write("Time value must be a whole number.");
+        return false;
+    }
+    return true;
+}
+
+void RouteController::toUpper(std::string& string) {
+    std::transform(string.cbegin(), string.cend(), string.begin(),
+                    [](auto c) { return toupper(c); });
 }
 
 RouteController::RouteController() : myFileDatabase(nullptr) {}
@@ -33,7 +62,12 @@ void RouteController::index(crow::response& res) {
 
 void RouteController::retrieveAppointment(const crow::request& req, crow::response& res) {
     try {
-        auto apptCode = req.url_params.get("apptCode");
+        std::string apptCode = req.url_params.get("apptCode");
+        if (isStrEmpty(apptCode, res)) {
+            res.end();
+            return;
+        }
+        toUpper(apptCode);
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
@@ -154,13 +188,14 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
 
 void RouteController::deleteAppointment(const crow::request& req, crow::response& res) {
     try {
-        auto apptCode = req.url_params.get("apptCode");
-        if (!apptCode) {
-            res.code = 400; 
-            res.write("Missing appointment code");
+        std::string apptCode = req.url_params.get("apptCode");
+
+        if (isStrEmpty(apptCode, res)) {
             res.end();
             return;
         }
+
+        toUpper(apptCode);
 
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
         auto it = appointmentMapping.find(apptCode);
@@ -193,6 +228,12 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             return;
         }
 
+        std::string titleStr = title;
+        if (isStrEmpty(titleStr, res)) {
+            res.end();
+            return;
+        }
+
         auto startTimeStr = req.url_params.get("startTime");
         if (!startTimeStr) {
             res.code = 400; 
@@ -200,6 +241,12 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             res.end();
             return;
         }
+
+        if (!verifyTimeStr(startTimeStr, res)) {
+            res.end();
+            return;
+        }
+
         auto startTime = std::stoi(startTimeStr);
 
         auto endTimeStr = req.url_params.get("endTime");
@@ -209,14 +256,27 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             res.end();
             return;
         }
-        auto endTime = std::stoi(endTimeStr);
 
-        auto location = req.url_params.get("location");
-        if (!location) {
-            res.code = 400; 
-            res.write("Missing appointment location");
+        if (!verifyTimeStr(endTimeStr, res)) {
             res.end();
             return;
+        }
+
+        auto endTime = std::stoi(endTimeStr);
+
+        if (endTime < startTime) {
+            res.code = 400;
+            res.body = "End time cannot be before Start time.";
+            res.end();
+            return;
+        }
+
+        bool freeChar = false;
+        auto location = req.url_params.get("location");
+        if (!location) {
+            freeChar = true;
+            location = reinterpret_cast<char*>(malloc(1));
+            location[0] = '\0';
         }
 
         std::string apptCode = "APPT" + std::to_string(apptCodeCounter++);
@@ -236,6 +296,9 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             res.write("Appointment Exists : ");
             res.write(it->second.display()); // Use dot operator to access method
         }
+        if (freeChar)
+            free(location);
+
         res.end();
     } catch (const std::exception& e) {
         res = handleException(e);

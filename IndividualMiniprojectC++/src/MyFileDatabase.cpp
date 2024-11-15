@@ -65,8 +65,8 @@ void MyFileDatabase::saveContentsToFile() const {
  */
 void MyFileDatabase::deSerializeObjectFromFile() {
     std::ifstream inFile(m_filePath, std::ios::binary);
-    std::map<std::string, Appointment> apptMapping;
-    setApptMapping(apptMapping);
+    //std::map<std::string, Appointment> apptMapping;
+    //setApptMapping(apptMapping);
 
     size_t mapSize;
     inFile.read(reinterpret_cast<char*>(&mapSize), sizeof(mapSize));
