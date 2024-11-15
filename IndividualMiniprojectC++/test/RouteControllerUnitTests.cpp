@@ -324,6 +324,68 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentTimeTestFail2) {
     ASSERT_EQ("Failed to update appointment time.", response.body);
 }
 
+TEST_F(RouteControllerUnitTests, UpdateApptTimesEmptyValues) {
+    crow::request req;
+    crow::response res;
+
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=asdf");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Time value must be a whole number.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=10");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT3&startTime=10&endTime=");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT3&startTime=10&endTime=asdf");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Time value must be a whole number.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=100&endTime=10");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Failed to update appointment time.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=100&endTime=1000");
+    req.url = "/updateApptTimes";
+    testMethods(&req, &res, {crow::HTTPMethod::PATCH});
+}
+
 TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleTest) {    
     crow::request request;
     crow::response response;
