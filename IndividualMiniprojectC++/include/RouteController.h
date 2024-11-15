@@ -26,6 +26,7 @@ class RouteController {
         bool isStrEmpty(const std::string& value, crow::response& res);
         bool verifyTimeStr(const std::string& value, crow::response& res);
         void toUpper(std::string& string);
+        void listAppointments(const crow::request& req, crow::response& res);
 };
 
 #endif 

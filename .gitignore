@@ -5,3 +5,9 @@ IndividualMiniprojectC++/build/*
 !IndividualMiniprojectC++/build/README.txt
 !IndividualMiniprojectC++/external_libraries/README.txt
 *.swp
+*.vscode
+PatientClient/build/*
+PatientClient/client
+DoctorClient/build/*
+DoctorClient/client
+.DS_Store
