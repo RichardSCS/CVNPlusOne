@@ -16,7 +16,6 @@ add_executable(PatientClient
 )
 
 target_include_directories(PatientClient PUBLIC 
-    ${INCLUDE_PATHS}
     /usr/local/include/restclient-cpp
     /usr/include/jsoncpp
 )
