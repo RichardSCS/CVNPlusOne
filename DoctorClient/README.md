@@ -1,4 +1,4 @@
-This is REST Client for the Doctor. The Doctor client views and deletes appointments which have been added by the Provider/Doctor. 
+This is REST Client for the Doctor. The Doctor client creates, updates, views and deletes appointments.
 
 It uses the restclient-cpp library for REST API calls to the Server.
 
@@ -29,9 +29,11 @@ Run client:
 
 Client files:
 -------------
-main.cpp is the file to send REST API calls to the Server.
-It has been tested for the GET API call:
-RestClient::get("http://127.0.0.1:8080/retrieveAppt?apptCode=APPT1")
+main.cpp 
+DoctorClient.cpp
+DoctorClient.h
 
-Examples of other REST API calls can be found here:
-https://github.com/mrtazz/restclient-cpp/blob/main/README.md
+Citations:
+----------
+1. REST client for C++:
+       https://github.com/mrtazz/restclient-cpp/blob/main/README.md
