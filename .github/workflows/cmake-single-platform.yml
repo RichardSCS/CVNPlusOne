@@ -50,6 +50,24 @@ jobs:
     - name: Install cppcheck
       run: sudo apt-get install cppcheck
 
+    - name: Start MySQL Server
+      run: sudo systemctl start mysql.service
+
+    - name: Add schema to MySQL Server
+      run: sudo mysql --user=root --password=root < CREATE SCHEMA ase;
+
+    - name: Create appointments table on MySQL Database
+      run: sudo mysql --user=root --password=root < CREATE TABLE `appointment` (`id` varchar(150) NOT NULL, `title` varchar(150) NOT NULL, `location` varchar(150) NOT NULL, `start_time` datetime NOT NULL, `end_time` datetime NOT NULL, PRIMARY KEY (`id`)
+
+    - name: Create DB password file
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: touch database.txt
+
+    - name: Populate DB password file
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: echo "root" > database.txt
+)
+
     #- name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type

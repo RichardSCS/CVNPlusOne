@@ -55,6 +55,7 @@ add_executable(IndividualMiniprojectTests
   test/AppointmentUnitTests.cpp
   test/RouteControllerUnitTests.cpp
   test/MyFileDatabaseUnitTests.cpp
+  test/ApptDatabaseUnitTests.cpp
   test/MyAppUnitTests.cpp
 )
 
@@ -90,6 +91,7 @@ if (CPPLINT)
         test/AppointmentUnitTests.cpp
         test/RouteControllerUnitTests.cpp
         test/MyFileDatabaseUnitTests.cpp
+        test/ApptDatabaseUnitTests.cpp
         test/MyAppUnitTests.cpp
     )
 
@@ -136,6 +138,7 @@ add_executable(CodeCoverage
   test/AppointmentUnitTests.cpp
   test/RouteControllerUnitTests.cpp
   test/MyFileDatabaseUnitTests.cpp
+  test/ApptDatabaseUnitTests.cpp
   test/MyAppUnitTests.cpp
 )
 
