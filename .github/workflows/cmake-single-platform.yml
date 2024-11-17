@@ -53,11 +53,14 @@ jobs:
     - name: Start MySQL Server
       run: sudo systemctl start mysql.service
 
-    - name: Add schema to MySQL Server
-      run: sudo mysql --user=root --password=root < CREATE SCHEMA ase;
+    - name: Create file for DB commands
+      run: touch db_commands.txt
 
-    - name: Create appointments table on MySQL Database
-      run: sudo mysql --user=root --password=root < CREATE TABLE `appointment` (`id` varchar(150) NOT NULL, `title` varchar(150) NOT NULL, `location` varchar(150) NOT NULL, `start_time` datetime NOT NULL, `end_time` datetime NOT NULL, PRIMARY KEY (`id`))
+    - name: Populate db commands
+      run: echo "CREATE SCHEMA ase; CREATE TABLE `appointment` (`id` varchar(150) NOT NULL, `title` varchar(150) NOT NULL, `location` varchar(150) NOT NULL, `start_time` datetime NOT NULL, `end_time` datetime NOT NULL, PRIMARY KEY (`id`));" > db_commands.txt
+
+    - name: Create schema and table on MySQL Database
+      run: sudo mysql --user=root --password=root < db_commands.txt
 
     - name: Create DB password file
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
