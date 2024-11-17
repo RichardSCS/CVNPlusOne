@@ -129,14 +129,14 @@ std::string DoctorClient::deleteAppointment(const std::string& code) {
     }
 }
 
-std::string DoctorClient::updateAppointmentTitle(const std::string& code, const std::string& title)
+std::string DoctorClient::updateAppointmentTitle(const std::string& code, const std::string& title) {
     std::string encodedCode = encodeURIComponent(code);
     std::string encodedTitle = encodeURIComponent(title);
 
     std::ostringstream urlBuilder;
     urlBuilder << baseUrl << "/updateApptTitle?"
-                << "code=" << encodedCode;
-                << "&title=" << encodedTitle
+                << "apptCode=" << encodedCode
+                << "&apptTitle=" << encodedTitle;
 
     std::cout << urlBuilder.str() << std::endl;
     RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
@@ -155,14 +155,14 @@ std::string DoctorClient::updateAppointmentTitle(const std::string& code, const 
     }
 }
 
-std::string DoctorClient::updateAppointmentLocation(const std::string& code, const std::string& location)
+std::string DoctorClient::updateAppointmentLocation(const std::string& code, const std::string& location) {
     std::string encodedCode = encodeURIComponent(code);
     std::string encodedLocation = encodeURIComponent(location);
 
     std::ostringstream urlBuilder;
     urlBuilder << baseUrl << "/updateApptLocation?"
-                << "code=" << encodedCode;
-                << "&location=" << encodedLocation
+                << "apptCode=" << encodedCode
+                << "&apptLocation=" << encodedLocation;
 
     std::cout << urlBuilder.str() << std::endl;
     RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
@@ -181,12 +181,12 @@ std::string DoctorClient::updateAppointmentLocation(const std::string& code, con
     }
 }
 
-std::string DoctorClient::updateAppointmentTimes(const std::string& code, int startTime, int endTime) {
+std::string DoctorClient::updateAppointmentTime(const std::string& code, int startTime, int endTime) {
     std::string encodedCode = encodeURIComponent(code);
 
     std::ostringstream urlBuilder;
     urlBuilder << baseUrl << "/updateApptTimes?"
-                << "code=" << encodedCode;
+                << "apptCode=" << encodedCode
                 << "&startTime=" << startTime
                 << "&endTime=" << endTime;
 

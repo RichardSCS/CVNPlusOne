@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
             case 4:
                 client.displayAllAppointmentDetails();
                 break;
-            case 5:
+            case 5: {
                 std::string title;
 
                 std::cout << "Enter appointment code: ";
@@ -114,9 +114,10 @@ int main(int argc, char* argv[]) {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::getline(std::cin, title);
 
-                client.updateAppointmentTitle(code, title);
+                client.updateAppointmentTitle(apptCode, title);
                 break;
-            case 6:
+            }
+            case 6: {
                 std::string location;
 
                 std::cout << "Enter appointment code: ";
@@ -126,9 +127,10 @@ int main(int argc, char* argv[]) {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::getline(std::cin, location);
 
-                client.updateAppointmentLocation(code, location);
+                client.updateAppointmentLocation(apptCode, location);
                 break;
-            case 7:
+            }
+            case 7: {
                 int startTime, endTime;
 
                 std::cout << "Enter appointment code: ";
@@ -144,8 +146,9 @@ int main(int argc, char* argv[]) {
                 std::cout << "Enter end time (UNIX timestamp): ";
                 std::cin >> endTime;
 
-                client.updateAppointmentTimes(code, startTime, endTime);
+                client.updateAppointmentTime(apptCode, startTime, endTime);
                 break;
+            }
             case 8:
                 std::cout << "Enter appointment code: ";
                 std::cin >> apptCode;
