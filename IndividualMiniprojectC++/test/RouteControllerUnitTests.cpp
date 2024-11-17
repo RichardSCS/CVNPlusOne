@@ -21,7 +21,7 @@ protected:
         routeController->initRoutes(*app);
         app->validate();
         routeController->setDatabase(MyApp::getDatabase());
-        routeController.setApptDatabase(MyApp::getApptDatabase());
+        routeController->setApptDatabase(MyApp::getApptDatabase());
     }
 
     static void TearDownTestSuite() {
