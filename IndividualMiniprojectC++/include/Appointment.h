@@ -10,12 +10,13 @@ class Appointment {
         time_t startTime;
         time_t endTime;
         std::string location;
-        std::set<std::string> participants;
         void setStartTime(const time_t newStartTime);
         void setEndTime(const time_t newEndTime);
+        std::string patientId;
+        std::string doctorId;
     
     public:
-        Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location);
+        Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId);
         Appointment();
 
         void serialize(std::ostream& out) const;
@@ -26,13 +27,15 @@ class Appointment {
         const time_t getApptStartTime() const;
         const time_t getApptEndTime() const;
         const std::string& getApptLocation() const;
+        const std::string& getPatientId() const;
+        const std::string& getDoctorId() const;
         std::string display() const;
 
         bool setTimes(const time_t newStartTime, const time_t newEndTime);
         void setLocation(const std::string &newLocation);
         void setTitle(const std::string &newTitle);
-        void addParticipant(const std::string &newParticipant);
-        void removeParticipant(const std::string &participant);
+        void setPatientId(const std::string &newPatient);
+        void setDoctorId(const std::string &newDoctor);
 };
 
 #endif

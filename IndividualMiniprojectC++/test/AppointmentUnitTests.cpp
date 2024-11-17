@@ -8,7 +8,7 @@ protected:
     static Appointment* testAppointment;
 
     static void SetUpTestSuite() {
-        testAppointment = new Appointment("TEST_APPT1", "Test Appointment 1", 1729681200, 1729681800, "Dentist Office");
+        testAppointment = new Appointment("TEST_APPT1", "Test Appointment 1", 1729681200, 1729681800, "Dentist Office", "Patient1", "Doctor1");
     }
 
     static void TearDownTestSuite() {
@@ -40,6 +40,18 @@ TEST_F(AppointmentUnitTests, UpdateLocationTest) {
     ASSERT_EQ("Dentist Office", testAppointment->getApptLocation());
     testAppointment->setLocation("Doctor Office");
     ASSERT_EQ("Doctor Office", testAppointment->getApptLocation());
+}
+
+TEST_F(AppointmentUnitTests, UpdatePatientIdTest) {
+    ASSERT_EQ("Patient1", testAppointment->getPatientId());
+    testAppointment->setPatientId("newPatient");
+    ASSERT_EQ("newPatient", testAppointment->getPatientId());
+}
+
+TEST_F(AppointmentUnitTests, UpdateDoctorIdTest) {
+    ASSERT_EQ("Doctor1", testAppointment->getDoctorId());
+    testAppointment->setDoctorId("newDoctor");
+    ASSERT_EQ("newDoctor", testAppointment->getDoctorId());
 }
 
 TEST_F(AppointmentUnitTests, UpdateTimeTest) {

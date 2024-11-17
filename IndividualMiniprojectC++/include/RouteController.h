@@ -21,12 +21,14 @@ class RouteController {
         void updateAppointmentTime(const crow::request& req, crow::response& res);
         void updateAppointmentTitle(const crow::request& req, crow::response& res);
         void updateAppointmentLocation(const crow::request& req, crow::response& res);
+        void updateAppointmentPatientId(const crow::request& req, crow::response& res);
+        void updateAppointmentDoctorId(const crow::request& req, crow::response& res);
+        void listAppointments(const crow::request& req, crow::response& res);
 
     protected:
         bool isStrEmpty(const std::string& value, crow::response& res);
         bool verifyTimeStr(const std::string& value, crow::response& res);
         void toUpper(std::string& string);
-        void listAppointments(const crow::request& req, crow::response& res);
 };
 
 #endif 

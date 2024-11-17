@@ -14,14 +14,14 @@
  * @param endTime       The end time of the appointment.
  * @param location      The location of the appointment.
  */
-Appointment::Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location)
-    : code(code), title(title), startTime(startTime), endTime(endTime), location(location) {}
+Appointment::Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId)
+    : code(code), title(title), startTime(startTime), endTime(endTime), location(location), patientId(patientId), doctorId(doctorId) {}
 
 /**
  * Constructs a default Course object with the default parameters.
  *
  */
-Appointment::Appointment() : code(""), title(""), startTime(0), endTime(0), location("") {}
+Appointment::Appointment() : code(""), title(""), startTime(0), endTime(0), location(""), patientId(""), doctorId("") {}
 
 const std::string& Appointment::getApptTitle() const {
     return title;
@@ -37,6 +37,14 @@ const time_t Appointment::getApptEndTime() const {
 
 const std::string& Appointment::getApptLocation() const {
     return location;
+}
+
+const std::string& Appointment::getPatientId() const {
+    return patientId;
+}
+
+const std::string& Appointment::getDoctorId() const {
+    return doctorId;
 }
 
 std::string Appointment::display() const {
@@ -74,12 +82,12 @@ void Appointment::setTitle(const std::string &newTitle) {
     title = newTitle;
 }
 
-void Appointment::addParticipant(const std::string &newParticipant) {
-    participants.insert(newParticipant);
+void Appointment::setPatientId(const std::string &newPatient) {
+    patientId = newPatient;
 }
 
-void Appointment::removeParticipant(const std::string &participant) {
-    participants.erase(participant);
+void Appointment::setDoctorId(const std::string &newDoctor) {
+    doctorId = newDoctor;
 }
 
 void Appointment::serialize(std::ostream& out) const {
@@ -98,6 +106,13 @@ void Appointment::serialize(std::ostream& out) const {
     out.write(reinterpret_cast<const char*>(&locationLen), sizeof(locationLen));
     out.write(location.c_str(), locationLen);
 
+    size_t patientIdLen = patientId.length();
+    out.write(reinterpret_cast<const char*>(&patientIdLen), sizeof(patientIdLen));
+    out.write(patientId.c_str(), patientIdLen);
+
+    size_t doctorIdLen = doctorId.length();
+    out.write(reinterpret_cast<const char*>(&doctorIdLen), sizeof(doctorIdLen));
+    out.write(doctorId.c_str(), doctorIdLen);
 }
 
 void Appointment::deserialize(std::istream& in) {
@@ -118,4 +133,14 @@ void Appointment::deserialize(std::istream& in) {
     in.read(reinterpret_cast<char*>(&locationLen), sizeof(locationLen));
     location.resize(locationLen);
     in.read(&location[0], locationLen);
+
+    size_t patientIdLen;
+    in.read(reinterpret_cast<char*>(&patientIdLen), sizeof(patientIdLen));
+    patientId.resize(patientIdLen);
+    in.read(&patientId[0], patientIdLen);
+
+    size_t doctorIdLen;
+    in.read(reinterpret_cast<char*>(&doctorIdLen), sizeof(doctorIdLen));
+    doctorId.resize(doctorIdLen);
+    in.read(&doctorId[0], doctorIdLen);
 }
