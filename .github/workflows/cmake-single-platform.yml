@@ -57,7 +57,7 @@ jobs:
       run: touch db_commands.txt
 
     - name: Populate db commands
-      run: echo "CREATE SCHEMA ase; CREATE TABLE appointment (id varchar(150) NOT NULL, title varchar(150) NOT NULL, location varchar(150) NOT NULL, start_time datetime NOT NULL, end_time datetime NOT NULL, PRIMARY KEY (id));" > db_commands.txt
+      run: echo "CREATE SCHEMA ase; USE ase; CREATE TABLE appointment (id varchar(150) NOT NULL, title varchar(150) NOT NULL, location varchar(150) NOT NULL, start_time datetime NOT NULL, end_time datetime NOT NULL, PRIMARY KEY (id));" > db_commands.txt
 
     - name: Create schema and table on MySQL Database
       run: sudo mysql --user=root --password=root < db_commands.txt
