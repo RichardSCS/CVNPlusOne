@@ -18,10 +18,12 @@ class ApptDatabase {
         void saveApptToDatabase(const Appointment& appt);
         void deleteApptFromDatabase(const std::string& apptCode);
         void saveContentsToDatabase(const std::map<std::string, Appointment>& mapping);
+        int getCodeCount();
 
     private:
         std::string m_filePath = "";
         std::string dbpw = "";
+        int codeCount = 0;
         bool executeQuery(std::string sql_query);
 };
 

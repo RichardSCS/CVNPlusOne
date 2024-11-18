@@ -85,6 +85,11 @@ void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
             appointmentMapping[id] = appt;
             //std::cout << "Loading Appt [" << id << "] from database" << std::endl;
             myFileDatabase->setApptMapping(appointmentMapping);
+            std::string countStr = id.substr(4); 
+            int count = std::stoi(countStr);
+            if (count > codeCount) {
+                codeCount = count;
+            }
         }
         delete stmt;
         delete connection;
@@ -96,3 +101,6 @@ void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
     }
 }
 
+int ApptDatabase::getCodeCount() {
+    return codeCount;
+}

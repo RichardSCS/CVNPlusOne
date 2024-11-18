@@ -30,7 +30,7 @@ MyFileDatabase* ApptDatabaseUnitTests::testMyFileDatabase = nullptr;
 ApptDatabase* ApptDatabaseUnitTests::testApptDatabase = nullptr;
 
 TEST_F(ApptDatabaseUnitTests, SaveApptToDbTest) {
-    std::string apptCode = "DB_TEST_APPT1";
+    std::string apptCode = "APPT4";
     Appointment* testAppointment = new Appointment(apptCode, "DB Test Appointment 1", 1729681200, 1729681800, "Dentist Office");
     testApptDatabase->saveApptToDatabase(*testAppointment);
     testApptDatabase->loadContentsFromDatabase(testMyFileDatabase);
