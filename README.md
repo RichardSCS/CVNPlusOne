@@ -120,29 +120,30 @@ On the Client:
 
 Please look at the instructions above for details on installing.
 
-2. The Service and the Clients can run on the same or different local or remote servers. One or all of them can run on GCP. For details of GCP installation please see instructions in
-2. Start the Service. 
+2. The Service and the Clients can run on the same or different local or remote servers. One or all of them can run on GCP. For details of GCP installation please see instructions above.
+
+3. Start the Service. 
 * Please refer to the Server section above for instructions to build and run the Server
 
-2. Start one Doctor and two Patient Clients.
+4. Start one Doctor and two Patient Clients.
    The Clients can be on same or different machines. 
-   The Patient Clients have their own ids and communicate with the Service over REST APIs. So each Client is independednt of each other. The Client can only see their own appointments.
+   The Patient Clients have their own ids and communicate with the Service over REST APIs. So each Client is independent of each other. The Client can only see their own appointments.
    The Doctor Client can create, update and view appointments for all the Patients.
 
-3. Create an appointment from Doctor client for the Patient1. 
+5. Create an appointment from Doctor client for the Patient1. 
    Check if the appointment shows on the Doctor and Patient1. The appointment codes and details should be identical on both.
 
-4. Repeat step 3 for Patient2
+6. Repeat step 3 for Patient2
 
-5. Now check the created appointments of Doctor. It should show appointments for both patients. However the patienst should only see their own appintments.
+7. Now check the created appointments of Doctor. It should show appointments for both patients. However the patienst should only see their own appintments.
 
-6. Update the title, location and times for Patient1 appointment from Doctor. View the appointments on Patient1 and Patient2. Patient1 should show the changed values. Patient2 appointment should be unchanged.
+8. Update the title, location and times for Patient1 appointment from Doctor. View the appointments on Patient1 and Patient2. Patient1 should show the changed values. Patient2 appointment should be unchanged.
 
-7. Delete the appointment from Patient2. Check the appointments on Doctor. Doctor should see only the Patient1 appointment. 
+9. Delete the appointment from Patient2. Check the appointments on Doctor. Doctor should see only the Patient1 appointment. 
    Patient1 appointment should show both on Doctor and Patient1.
    Patient2 appointment should be empty.
 
-8. Now create 2 new appointments from Patient2. 
+10. Now create 2 new appointments from Patient2. 
    Check if the new appointments show on Doctor and Patient2.
    Check that the new appointments do not show on Patient1.
    Delete one of the new appointments from Doctor. Check if it has been deleted on Doctor and Patient2. Check if Patient1 appointments are not impacted.
