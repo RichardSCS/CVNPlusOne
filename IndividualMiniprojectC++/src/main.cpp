@@ -31,10 +31,10 @@ int main(int argc, char* argv[]) {
     app.signal_clear();
     std::signal(SIGINT, signalHandler);
     std::signal(SIGTERM, signalHandler);
-    
     RouteController routeController;
     routeController.initRoutes(app);
     routeController.setDatabase(MyApp::getDatabase());
+    routeController.setApptDatabase(MyApp::getApptDatabase());
     app.port(8080).multithreaded().run();
     return 0;
 }

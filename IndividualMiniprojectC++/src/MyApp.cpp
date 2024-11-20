@@ -5,6 +5,7 @@
 #include <iostream>
 
 MyFileDatabase* MyApp::myFileDatabase = nullptr;
+ApptDatabase* MyApp::apptDatabase = nullptr;
 bool MyApp::saveData = false;
 
 void MyApp::run(const std::string& mode) {
@@ -12,16 +13,23 @@ void MyApp::run(const std::string& mode) {
     if (mode == "setup") {
         setupDatabase();
         std::cout << "System Setup" << std::endl;
+        apptDatabase = new ApptDatabase("database.txt");
         return;
     }
     myFileDatabase = new MyFileDatabase(0, "testfile.bin");
+    apptDatabase = new ApptDatabase("database.txt");
     std::cout << "Start up" << std::endl;
+    apptDatabase->saveContentsToDatabase(myFileDatabase->getAppointmentMapping());
+    apptDatabase->loadContentsFromDatabase(myFileDatabase);
 }
 
 void MyApp::onTermination() {
     std::cout << "Termination" << std::endl;
     if (saveData && myFileDatabase) {
         myFileDatabase->saveContentsToFile();
+    }
+    if (apptDatabase) {
+        apptDatabase->saveContentsToDatabase(myFileDatabase->getAppointmentMapping());
     }
 
     delete myFileDatabase;
@@ -36,6 +44,10 @@ void MyApp::overrideDatabase(MyFileDatabase* testData) {
 
 MyFileDatabase *MyApp::getDatabase() {
     return myFileDatabase;
+}
+
+ApptDatabase *MyApp::getApptDatabase() {
+    return apptDatabase;
 }
 
 void MyApp::setupDatabase() {

@@ -65,7 +65,22 @@ This section describes the endpoints that the service provides, as well as their
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" or HTTP 400 Status Code is returned along with "Failed to update appointment time." in the response body. 
 
 ## Database
-For first iteration we have set up testfile.bin. On calling `IndividualMiniproject setup`, db entries will be setup. On subsequent calls to IndividualMiniproject without `setup`, it reads the appointments from the db. On termination it writes the appointments created into the db.
+* For first iteration we have set up testfile.bin. On calling `IndividualMiniproject setup`, db entries will be setup. On subsequent calls to IndividualMiniproject without `setup`, it reads the appointments from the db. On termination it writes the appointments created into the db.
+* For second iteration we have added a framework for connection to a MySQL database. The MySQL database must run on the same server as the main program. 
+* The password for the root user of the MySQL database must be stored in a file named "database.txt" in the build directory. 
+* The MySQL database must have a schema named "ase", and a table in that schema called "appointment".
+* The appointment table has the following CREATE TABLE statement:
+CREATE TABLE `appointment` (
+  `id` varchar(150) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `location` varchar(150) NOT NULL,
+  `start_time` datetime NOT NULL,
+  `end_time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+)
+
+## Integration Tests
+We tested the integration of the service with the MySQL database via the tests in the ApptDatabaseUnitTests class.
 
 ## Style Checking Report
 The cpplint tool was used to check the style of the code.

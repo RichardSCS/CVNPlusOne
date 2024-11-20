@@ -4,15 +4,18 @@
 #include "crow.h"
 #include "Globals.h"
 #include "MyFileDatabase.h"
+#include "ApptDatabase.h"
 
 class RouteController {
     private:
         MyFileDatabase* myFileDatabase;
+        ApptDatabase* apptDatabase;
 
     public:
         RouteController();
         void initRoutes(crow::App<>& app);
         void setDatabase(MyFileDatabase* db);
+        void setApptDatabase(ApptDatabase* db);
 
         void index(crow::response& res);
         void retrieveAppointment(const crow::request& req, crow::response& res);

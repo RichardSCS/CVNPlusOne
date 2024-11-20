@@ -25,6 +25,9 @@ jobs:
     - name: Install ASIO
       run: sudo apt-get install libasio-dev
 
+    - name: Install MySQL C++ Connection
+      run: sudo apt-get install libmysqlcppconn-dev
+
     - name: Get Crow
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/external_libraries
       run: wget https://github.com/CrowCpp/Crow/releases/download/v1.2.0/Crow-1.2.0.zip
@@ -46,6 +49,26 @@ jobs:
 
     - name: Install cppcheck
       run: sudo apt-get install cppcheck
+
+    - name: Start MySQL Server
+      run: sudo systemctl start mysql.service
+
+    - name: Create file for DB commands
+      run: touch db_commands.txt
+
+    - name: Populate db commands
+      run: echo "CREATE SCHEMA ase; USE ase; CREATE TABLE appointment (id varchar(150) NOT NULL, title varchar(150) NOT NULL, location varchar(150) NOT NULL, start_time datetime NOT NULL, end_time datetime NOT NULL, PRIMARY KEY (id));" > db_commands.txt
+
+    - name: Create schema and table on MySQL Database
+      run: sudo mysql --user=root --password=root < db_commands.txt
+
+    - name: Create DB password file
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: touch database.txt
+
+    - name: Populate DB password file
+      working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
+      run: echo "root" > database.txt
 
     #- name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
