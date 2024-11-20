@@ -17,6 +17,7 @@ class ApptDatabase {
         void loadContentsFromDatabase(MyFileDatabase* myFileDatabase);
         void saveApptToDatabase(const Appointment& appt);
         void deleteApptFromDatabase(const std::string& apptCode);
+        void wipeDatabase();
         void saveContentsToDatabase(const std::map<std::string, Appointment>& mapping);
         int getCodeCount();
 

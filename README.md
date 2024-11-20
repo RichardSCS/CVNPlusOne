@@ -79,6 +79,9 @@ CREATE TABLE `appointment` (
   PRIMARY KEY (`id`)
 )
 
+## Integration Tests
+We tested the integration of the service with the MySQL database via the tests in the ApptDatabaseUnitTests class.
+
 ## Style Checking Report
 The cpplint tool was used to check the style of the code.
 ![Screenshot of a checkstyle with no errors](reports/cpplint_10_18.PNG)

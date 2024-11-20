@@ -64,6 +64,11 @@ void ApptDatabase::deleteApptFromDatabase(const std::string& apptCode) {
     executeQuery(query);
 }
 
+void ApptDatabase::wipeDatabase() {
+    std::string query = "DELETE FROM appointment;";
+    executeQuery(query);
+}
+
 void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
     std::string query = "SELECT id, title, UNIX_TIMESTAMP(start_time) AS start_time, UNIX_TIMESTAMP(end_time) AS end_time, location FROM appointment;";
 

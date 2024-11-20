@@ -89,6 +89,10 @@ void RouteController::updateAppointmentTitle(const crow::request& req, crow::res
     try {
         auto apptCode = req.url_params.get("apptCode");
         auto apptTitle = req.url_params.get("apptTitle");
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptTitle, res)) {
+            res.end();
+            return;
+        }
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
@@ -114,6 +118,10 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
     try {
         auto apptCode = req.url_params.get("apptCode");
         auto apptLocation = req.url_params.get("apptLocation");
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptLocation, res)) {
+            res.end();
+            return;
+        }
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
@@ -166,6 +174,10 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
         auto apptCode = req.url_params.get("apptCode");
         auto startTimeStr = (req.url_params.get("startTime"));
         auto endTimeStr = (req.url_params.get("endTime"));
+        if (isStrEmpty(apptCode, res) || isStrEmpty(startTimeStr, res) || isStrEmpty(endTimeStr, res)) {
+            res.end();
+            return;
+        }
 
         int startTime = std::stoi(startTimeStr);
         int endTime = std::stoi(endTimeStr);
