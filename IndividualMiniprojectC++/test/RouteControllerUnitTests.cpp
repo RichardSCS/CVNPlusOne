@@ -440,6 +440,38 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentDoctorIdTestFail) {
     ASSERT_EQ("Appointment Not Found", response.body);
 }
 
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleEmptyValues) {
+    crow::request req;
+    crow::response res;
+
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=");
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT113");
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT113&apptTitle=");
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&apptTitle=newTitle");
+    req.url = "/updateApptTitle";
+    testMethods(&req, &res, {crow::HTTPMethod::PATCH});
+}
+
 TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationTest) {    
     crow::request request;
     crow::response response;
