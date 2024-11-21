@@ -58,6 +58,13 @@ std::vector<crow::HTTPMethod> RouteControllerUnitTests::methods = {crow::HTTPMet
                                                                    crow::HTTPMethod::PATCH,
                                                                    crow::HTTPMethod::DELETE};
 
+TEST_F(RouteControllerUnitTests, IndexEndpoint) {
+    crow::response res;
+    routeController->index(res);
+    ASSERT_EQ(res.code, 200);
+    ASSERT_EQ(res.body, "Welcome, in order to make an API call direct your browser or Postman to an endpoint \n\n This can be done using the following format: \n\n http://127.0.0.1:8080/endpoint?arg=value");
+}
+
 TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {    
     crow::request request;
     crow::response response;
