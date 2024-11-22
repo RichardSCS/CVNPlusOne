@@ -15,7 +15,7 @@
  * @param location      The location of the appointment.
  */
 
-Appointment::Appointment(const std::string code, const std::string title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId)
+Appointment::Appointment(const std::string &code, const std::string &title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId)
     : code(code), title(title), startTime(startTime), endTime(endTime), location(location), patientId(patientId), doctorId(doctorId) {}
 
 /**
