@@ -8,10 +8,11 @@
 #include "Globals.h"
 #include "MyFileDatabase.h"
 #include "Appointment.h"
+#include "ApptDatabase.h"
 #include "crow.h"
 #include "regex"
 
-int apptCodeCounter = 4;
+int codeCount = 4;
 
 // Utility function to handle exceptions
 crow::response handleException(const std::exception& e) {
@@ -47,7 +48,7 @@ void RouteController::toUpper(std::string& string) {
                     [](auto c) { return toupper(c); });
 }
 
-RouteController::RouteController() : myFileDatabase(nullptr) {}
+RouteController::RouteController() : myFileDatabase(nullptr), apptDatabase(nullptr) {}
 
 /**
  * Redirects to the homepage.
@@ -88,6 +89,10 @@ void RouteController::updateAppointmentTitle(const crow::request& req, crow::res
     try {
         auto apptCode = req.url_params.get("apptCode");
         auto apptTitle = req.url_params.get("apptTitle");
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptTitle, res)) {
+            res.end();
+            return;
+        }
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
@@ -97,6 +102,9 @@ void RouteController::updateAppointmentTitle(const crow::request& req, crow::res
         } else {
             it->second.setTitle(apptTitle);
             myFileDatabase->setApptMapping(appointmentMapping);
+            if (apptDatabase) {
+                apptDatabase->saveApptToDatabase(it->second);
+            }
             res.code = 200;
             res.write("Appointment title successfully updated.");
         }
@@ -110,6 +118,10 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
     try {
         auto apptCode = req.url_params.get("apptCode");
         auto apptLocation = req.url_params.get("apptLocation");
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptLocation, res)) {
+            res.end();
+            return;
+        }
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
@@ -119,6 +131,9 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
         } else {
             it->second.setLocation(apptLocation);
             myFileDatabase->setApptMapping(appointmentMapping);
+            if (apptDatabase) {
+                apptDatabase->saveApptToDatabase(it->second);
+            }
             res.code = 200;
             res.write("Appointment location successfully updated.");
         }
@@ -203,6 +218,10 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
         auto apptCode = req.url_params.get("apptCode");
         auto startTimeStr = (req.url_params.get("startTime"));
         auto endTimeStr = (req.url_params.get("endTime"));
+        if (isStrEmpty(apptCode, res) || isStrEmpty(startTimeStr, res) || isStrEmpty(endTimeStr, res)) {
+            res.end();
+            return;
+        }
 
         int startTime = std::stoi(startTimeStr);
         int endTime = std::stoi(endTimeStr);
@@ -217,6 +236,9 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
         } else {
             if (it->second.setTimes(startTime, endTime)) {
                 myFileDatabase->setApptMapping(appointmentMapping);
+                if (apptDatabase) {
+                    apptDatabase->saveApptToDatabase(it->second);
+                }
                 res.code = 200;
                 res.write("Appointment time successfully updated.");
             } else {
@@ -253,6 +275,9 @@ void RouteController::deleteAppointment(const crow::request& req, crow::response
 
         appointmentMapping.erase(it);
         myFileDatabase->removeAppointment(apptCode);
+        if (apptDatabase) {
+            apptDatabase->deleteApptFromDatabase(apptCode);
+        }
 
         res.code = 200;
         res.write("Appointment deleted successfully");
@@ -351,7 +376,14 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             location[0] = '\0';
         }
 
-        std::string apptCode = "APPT" + std::to_string(apptCodeCounter++);
+        if (apptDatabase) {
+            int dbCount = apptDatabase->getCodeCount();
+            if (dbCount > codeCount) {
+                    codeCount = dbCount;
+            }
+        }
+
+        std::string apptCode = "APPT" + std::to_string(++codeCount);
 
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
@@ -363,6 +395,9 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             Appointment appt(apptCode, title, startTime, endTime, location, patientId, doctorId);
             appointmentMapping[apptCode] = appt;
             myFileDatabase->setApptMapping(appointmentMapping);
+            if (apptDatabase) {
+                apptDatabase->saveApptToDatabase(appt);
+            }
         } else {
             res.code = 404;
             res.write("Appointment Exists : ");
@@ -422,4 +457,8 @@ void RouteController::initRoutes(crow::App<>& app) {
 
 void RouteController::setDatabase(MyFileDatabase *db) {
     myFileDatabase = db;
+}
+
+void RouteController::setApptDatabase(ApptDatabase *db) {
+    apptDatabase = db;
 }

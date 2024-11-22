@@ -14,7 +14,8 @@
  * @param endTime       The end time of the appointment.
  * @param location      The location of the appointment.
  */
-Appointment::Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId)
+
+Appointment::Appointment(const std::string code, const std::string title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId)
     : code(code), title(title), startTime(startTime), endTime(endTime), location(location), patientId(patientId), doctorId(doctorId) {}
 
 /**
@@ -25,6 +26,10 @@ Appointment::Appointment() : code(""), title(""), startTime(0), endTime(0), loca
 
 const std::string& Appointment::getApptTitle() const {
     return title;
+}
+
+const std::string& Appointment::getApptCode() const {
+    return code;
 }
 
 const time_t Appointment::getApptStartTime() const {

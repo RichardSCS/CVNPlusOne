@@ -21,6 +21,7 @@ protected:
         routeController->initRoutes(*app);
         app->validate();
         routeController->setDatabase(MyApp::getDatabase());
+        routeController->setApptDatabase(MyApp::getApptDatabase());
     }
 
     static void TearDownTestSuite() {
@@ -63,7 +64,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {
     request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&location=Pharmacy&patientId=patient1&doctorId=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(201, response.code);
-    ASSERT_EQ("Appointment Created : apptCode APPT4", response.body);
+    ASSERT_EQ("Appointment Created", response.body.substr(0,19));
 }
 
 TEST_F(RouteControllerUnitTests, CreateAppointmentMissingTitle) {    
@@ -117,7 +118,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentMissingLocation) {
     request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&patientId=patient1&doctorId=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(201, response.code);
-    ASSERT_EQ("Appointment Created : apptCode APPT5", response.body);
+    ASSERT_EQ("Appointment Created", response.body.substr(0,19));
 }
 
 TEST_F(RouteControllerUnitTests, CreateAppointmentEmptyValues) {
@@ -180,7 +181,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentEmptyValues) {
     req.url_params = crow::query_string("?title=Office&startTime=10&endTime=10&patientId=patient1&doctorId=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 201);
-    ASSERT_EQ(res.body, "Appointment Created : apptCode APPT6");
+    ASSERT_EQ("Appointment Created", res.body.substr(0,19));
 
     req.url = "/createAppt";
     testMethods(&req, &res, {crow::HTTPMethod::POST});
@@ -237,7 +238,7 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentTest) {
     ASSERT_EQ(res.body, "Empty query string value not allowed.");
 
     req.url = "/deleteAppt";
-    req.url_params = crow::query_string("?apptCode=appt4");
+    req.url_params = crow::query_string("?apptCode=appt5");
     testMethods(&req, &res, {crow::HTTPMethod::DELETE});
 }
 

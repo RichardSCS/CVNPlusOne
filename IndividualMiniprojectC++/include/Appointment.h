@@ -16,7 +16,7 @@ class Appointment {
         std::string doctorId;
     
     public:
-        Appointment(std::string code, std::string title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId);
+        Appointment(const std::string& code, const std::string& title, time_t startTime, time_t endTime, const std::string &location, const std::string &patientId, const std::string &doctorId);
         Appointment();
 
         void serialize(std::ostream& out) const;
