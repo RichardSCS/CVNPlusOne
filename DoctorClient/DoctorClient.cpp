@@ -124,7 +124,85 @@ std::string DoctorClient::deleteAppointment(const std::string& code) {
         }
         return response.body;
     } else {
-        std::cerr << "Failed to delete appoitment " << code << ". HTTP code: " << response.code << "\n";
+        std::cerr << "Failed to delete appointment " << code << ". HTTP code: " << response.code << "\n";
+        return "Appointment Not Found";
+    }
+}
+
+std::string DoctorClient::updateAppointmentTitle(const std::string& code, const std::string& title) {
+    std::string encodedCode = encodeURIComponent(code);
+    std::string encodedTitle = encodeURIComponent(title);
+
+    std::ostringstream urlBuilder;
+    urlBuilder << baseUrl << "/updateApptTitle?"
+                << "apptCode=" << encodedCode
+                << "&apptTitle=" << encodedTitle;
+
+    std::cout << urlBuilder.str() << std::endl;
+    RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
+
+    if (response.code == 200) {
+        auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
+        if (it == DoctorClient::createdAppointments.end()) {
+            std::string apptCode = response.body.substr(response.body.find("APPT"));
+            DoctorClient::createdAppointments.push_back(apptCode);
+        }
+        std::cout << "Appointment " << code << " title updated successfully\n";
+        return response.body;
+    } else {
+        std::cerr << "Failed to update appointment title " << code << ". HTTP code: " << response.code << "\n";
+        return "Appointment Not Found";
+    }
+}
+
+std::string DoctorClient::updateAppointmentLocation(const std::string& code, const std::string& location) {
+    std::string encodedCode = encodeURIComponent(code);
+    std::string encodedLocation = encodeURIComponent(location);
+
+    std::ostringstream urlBuilder;
+    urlBuilder << baseUrl << "/updateApptLocation?"
+                << "apptCode=" << encodedCode
+                << "&apptLocation=" << encodedLocation;
+
+    std::cout << urlBuilder.str() << std::endl;
+    RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
+
+    if (response.code == 200) {
+        auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
+        if (it == DoctorClient::createdAppointments.end()) {
+            std::string apptCode = response.body.substr(response.body.find("APPT"));
+            DoctorClient::createdAppointments.push_back(apptCode);
+        }
+        std::cout << "Appointment " << code << " location updated successfully\n";
+        return response.body;
+    } else {
+        std::cerr << "Failed to update appointment location " << code << ". HTTP code: " << response.code << "\n";
+        return "Appointment Not Found";
+    }
+}
+
+std::string DoctorClient::updateAppointmentTime(const std::string& code, int startTime, int endTime) {
+    std::string encodedCode = encodeURIComponent(code);
+
+    std::ostringstream urlBuilder;
+    urlBuilder << baseUrl << "/updateApptTimes?"
+                << "apptCode=" << encodedCode
+                << "&startTime=" << startTime
+                << "&endTime=" << endTime;
+
+    std::cout << urlBuilder.str() << std::endl;
+    RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
+
+    if (response.code == 200) {
+        auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
+        if (it == DoctorClient::createdAppointments.end()) {
+            std::string apptCode = response.body.substr(response.body.find("APPT"));
+            DoctorClient::createdAppointments.push_back(apptCode);
+        }
+        std::cout << "Appointment " << code << " times updated successfully\n";
+        return response.body;
+    } else {
+        std::cerr << "Failed to update appointment times " << code << ". HTTP code: " << response.code << "\n";
         return "Appointment Not Found";
     }
 }

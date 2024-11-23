@@ -18,6 +18,9 @@ class DoctorClient {
         void displayAppointmentDetail(const std::string& code);
         std::string deleteAppointment(const std::string& code);
         std::string createAppointment(const std::string& title, int startTime, int endTime, const std::string& location);
+        std::string updateAppointmentTitle(const std::string& code, const std::string& title);
+        std::string updateAppointmentLocation(const std::string& code, const std::string& location);
+        std::string updateAppointmentTime(const std::string& code,int startTime, int endTime);
 };
 
 #endif
