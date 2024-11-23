@@ -215,8 +215,8 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentMissingCode) {
     
     routeController->deleteAppointment(request, response);
     
-    ASSERT_EQ(500, response.code);
-    ASSERT_EQ("An error has occurred", response.body);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appt code", response.body);
 }
 
 TEST_F(RouteControllerUnitTests, DeleteAppointmentNotFound) {
@@ -235,8 +235,8 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentTest) {
     crow::response res;
 
     routeController->deleteAppointment(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ("An error has occurred", res.body);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ("Missing appt code", res.body);
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=");

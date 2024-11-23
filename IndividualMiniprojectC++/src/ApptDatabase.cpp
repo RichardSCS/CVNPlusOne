@@ -18,39 +18,45 @@ ApptDatabase::ApptDatabase(const std::string& filePath) : m_filePath(filePath) {
         std::getline(file, line);
         file.close();
         dbpw = line;
+        try {
+            m_driver = get_driver_instance();
+            m_connection = m_driver->connect("tcp://127.0.0.1:3306", "root", dbpw);
+            m_connection->setSchema("ase");
+        } catch (sql::SQLException &e) {
+            std::cout << "Failed to connect to database!" << std::endl;
+            std::cerr << "Error: " << e.what() << std::endl;
+            std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        }
     } else {
         std::cerr << "Error opening database info file!" << std::endl;
     }
 }
 
-bool ApptDatabase::executeQuery(std::string sql_query) {
-    try {
-        sql::Driver *driver = get_driver_instance();
-        sql::Connection *connection = driver->connect("tcp://127.0.0.1:3306", "root", dbpw);
-        connection->setSchema("ase");
-        sql::Statement *stmt = connection->createStatement();
-        sql::ResultSet *res = stmt->executeQuery(sql_query);
-        delete stmt;
-        delete connection;
-    } catch (sql::SQLException &e) {
-        // std::cerr << "Error: " << e.what() << std::endl;
-        // std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
-        // std::cerr << "SQLState: " << e.getSQLState() << std::endl;
-        return false;
-    }
-    return true;
-}
-
 void ApptDatabase::saveApptToDatabase(const Appointment& appt) {
-    std::string query = "REPLACE INTO appointment (id, title, location, participantId, createdBy, start_time, end_time) VALUES ('";
-    query += appt.getApptCode() + "', '";
-    query += appt.getApptTitle() + "', '";
-    query += appt.getApptLocation() + "', '";
-    query += appt.getParticipantId() + "', '";
-    query += appt.getCreatedBy() + "', ";
-    query += "FROM_UNIXTIME(" + std::to_string(appt.getApptStartTime()) + "), ";
-    query += "FROM_UNIXTIME(" + std::to_string(appt.getApptEndTime()) + ") );";
-    executeQuery(query);
+    if (!m_connection || !m_connection->isValid()) {
+        return;
+    }
+
+    try {
+        std::string query = "REPLACE INTO appointment (id, title, location, participantId, createdBy, start_time, end_time) VALUES (?, ?, ?, ?, ? ";
+        query += "FROM_UNIXTIME(" + std::to_string(appt.getApptStartTime()) + "), ";
+        query += "FROM_UNIXTIME(" + std::to_string(appt.getApptEndTime()) + ") );";
+
+        sql::PreparedStatement  *prep_stmt;
+        prep_stmt = m_connection->prepareStatement(query);
+        prep_stmt->setString(1, appt.getApptCode());
+        prep_stmt->setString(2, appt.getApptTitle());
+        prep_stmt->setString(3, appt.getApptLocation());
+        prep_stmt->setString(4, appt.getParticipantId());
+        prep_stmt->setString(5, appt.getCreatedBy());
+        prep_stmt->execute();
+        //std::cout << "Saving Appt [" << appt.getApptCode() << "] to database." << std::endl;
+        delete prep_stmt;
+    } catch (sql::SQLException &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "SQLState: " << e.getSQLState() << std::endl;
+    }
 }
 
 void ApptDatabase::saveContentsToDatabase(const std::map<std::string, Appointment>& mapping) {
@@ -60,26 +66,51 @@ void ApptDatabase::saveContentsToDatabase(const std::map<std::string, Appointmen
 }
 
 void ApptDatabase::deleteApptFromDatabase(const std::string& apptCode) {
-    std::string query = "DELETE FROM appointment WHERE id = '";
-    query += apptCode;
-    query += "';";
-    executeQuery(query);
+    if (!m_connection || !m_connection->isValid()) {
+        return;
+    }
+    try {
+        std::string query = "DELETE FROM appointment WHERE id = ?";
+        sql::PreparedStatement *prep_stmt;
+        prep_stmt = m_connection->prepareStatement(query);
+        prep_stmt->setString(1, apptCode);
+        prep_stmt->execute();
+        //std::cout << "Deleting Appt [" << apptCode << "] from database." << std::endl;
+        delete prep_stmt;
+    } catch (sql::SQLException &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "SQLState: " << e.getSQLState() << std::endl;
+    }
 }
 
 void ApptDatabase::wipeDatabase() {
-    std::string query = "DELETE FROM appointment;";
-    executeQuery(query);
+    if (!m_connection || !m_connection->isValid()) {
+        return;
+    }
+    try {
+        std::string query = "DELETE FROM appointment;";
+        sql::PreparedStatement *prep_stmt;
+        prep_stmt = m_connection->prepareStatement(query);
+        prep_stmt->execute();
+        delete prep_stmt;
+    } catch (sql::SQLException &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "SQLState: " << e.getSQLState() << std::endl;
+    }
 }
 
 void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
-        std::string query = "SELECT id, title, UNIX_TIMESTAMP(start_time) AS start_time, UNIX_TIMESTAMP(end_time) AS end_time, location, participantId, createdBy FROM appointment;";
-
+    if (!m_connection || !m_connection->isValid()) {
+        return;
+    }
+    std::string query = "SELECT id, title, UNIX_TIMESTAMP(start_time) AS start_time, UNIX_TIMESTAMP(end_time) AS end_time, location, participantId, createdBy FROM appointment;";
     try {
-        sql::Driver *driver = get_driver_instance();
-        sql::Connection *connection = driver->connect("tcp://127.0.0.1:3306", "root", dbpw);
-        connection->setSchema("ase");
-        sql::Statement *stmt = connection->createStatement();
-        sql::ResultSet *result = stmt->executeQuery(query);
+        sql::PreparedStatement *prep_stmt;
+        prep_stmt = m_connection->prepareStatement(query);
+        sql::ResultSet *result = prep_stmt->executeQuery();
+
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
         while (result->next()) {
             std::string id = result->getString("id");
@@ -100,13 +131,12 @@ void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
                 codeCount = count;
             }
         }
-        delete stmt;
-        delete connection;
+        delete prep_stmt;
         delete result;
     } catch (sql::SQLException &e) {
-        // std::cerr << "Error: " << e.what() << std::endl;
-        // std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
-        // std::cerr << "SQLState: " << e.getSQLState() << std::endl;
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "SQLState: " << e.getSQLState() << std::endl;
     }
 }
 
