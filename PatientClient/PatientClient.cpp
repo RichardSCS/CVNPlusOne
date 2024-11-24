@@ -11,19 +11,13 @@ std::vector<std::string> PatientClient::getAppointmentCodes() {
     std::vector<std::string> codes;
 
     if (response.code == 200) {
-        Json::Value jsonData;
-        Json::Reader jsonReader;
-        
-        if (jsonReader.parse(response.body, jsonData)) {
-            if (jsonData.isArray()) {
-                for (const auto& item : jsonData) {
-                    codes.push_back(item.asString());
-                }
-            } else {
-                std::cerr << "Unexpected JSON format: Expected an array\n";
+        std::istringstream stream(response.body);
+        std::string line;
+
+        while (std::getline(stream, line)) {
+            if (!line.empty()) {
+                codes.push_back(line);
             }
-        } else {
-            std::cerr << "Failed to parse JSON response\n";
         }
     } else {
         std::cerr << "Failed to retrieve appointment codes. HTTP code: " << response.code << "\n";
@@ -83,9 +77,8 @@ std::string PatientClient::createAppointment(const std::string& title, int start
 }
 
 void PatientClient::displayAllAppointmentCodes() {
-    // std::vector<std::string> codes = getAppointmentCodes();
-    // Only get patient client created appointments
-    std::vector<std::string> codes = PatientClient::createdAppointments;
+    // Get all the appts existed in the DB
+    std::vector<std::string> codes = getAppointmentCodes();
     if (codes.empty()) {
         std::cout << "No appointment codes found\n";
     } else {
@@ -97,8 +90,8 @@ void PatientClient::displayAllAppointmentCodes() {
 }
 
 void PatientClient::displayAllAppointmentDetails() {
-    // auto codes = getAppointmentCodes();
-    std::vector<std::string> codes = PatientClient::createdAppointments;
+    // Get all the appts existed in the DB
+    std::vector<std::string> codes = getAppointmentCodes();
     for (const auto& code : codes) {
         std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
     }
