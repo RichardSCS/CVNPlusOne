@@ -143,6 +143,59 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
     }
 }
 
+void RouteController::updateAppointmentParticipantId(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        auto apptParticipantId = req.url_params.get("apptParticipantId");
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptParticipantId, res)) {
+            res.end();
+            return;
+        }
+
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+
+        auto it = appointmentMapping.find(apptCode);
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment Not Found");
+        } else {
+            it->second.setParticipantId(apptParticipantId);
+            myFileDatabase->setApptMapping(appointmentMapping);
+            res.code = 200;
+            res.write("Appointment participantId successfully updated.");
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
+void RouteController::updateAppointmentCreatedBy(const crow::request& req, crow::response& res) {
+    try {
+        auto apptCode = req.url_params.get("apptCode");
+        auto apptCreatedBy = req.url_params.get("apptCreatedBy");
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptCreatedBy, res)) {
+            res.end();
+            return;
+        }
+        auto appointmentMapping = myFileDatabase->getAppointmentMapping();
+
+        auto it = appointmentMapping.find(apptCode);
+        if (it == appointmentMapping.end()) {
+            res.code = 404;
+            res.write("Appointment Not Found");
+        } else {
+            it->second.setCreatedBy(apptCreatedBy);
+            myFileDatabase->setApptMapping(appointmentMapping);
+            res.code = 200;
+            res.write("Appointment createdBy successfully updated.");
+        }
+        res.end();
+    } catch (const std::exception& e) {
+        res = handleException(e);
+    }
+}
+
 void RouteController::listAppointments(const crow::request& req, crow::response& res) {
     try {
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
@@ -259,6 +312,34 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             return;
         }
 
+        auto participantId = req.url_params.get("participantId");
+        if (!participantId) {
+            res.code = 400; 
+            res.write("Missing appointment participantId");
+            res.end();
+            return;
+        }
+
+        std::string patientIdStr = participantId;
+        if (isStrEmpty(patientIdStr, res)) {
+            res.end();
+            return;
+        }
+
+        auto createdBy = req.url_params.get("createdBy");
+        if (!createdBy) {
+            res.code = 400; 
+            res.write("Missing appointment createdBy");
+            res.end();
+            return;
+        }
+
+        std::string doctorIdStr = createdBy;
+        if (isStrEmpty(doctorIdStr, res)) {
+            res.end();
+            return;
+        }
+
         auto startTimeStr = req.url_params.get("startTime");
         if (!startTimeStr) {
             res.code = 400; 
@@ -320,7 +401,7 @@ void RouteController::createAppointment(const crow::request& req, crow::response
             res.code = 201;
             res.write("Appointment Created : apptCode ");
             res.write(apptCode);
-            Appointment appt(apptCode, title, startTime, endTime, location);
+            Appointment appt(apptCode, title, startTime, endTime, location, participantId, createdBy);
             appointmentMapping[apptCode] = appt;
             myFileDatabase->setApptMapping(appointmentMapping);
             if (apptDatabase) {
@@ -368,6 +449,14 @@ void RouteController::initRoutes(crow::App<>& app) {
     CROW_ROUTE(app, "/updateApptLocation")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
             updateAppointmentLocation(req, res);
+        });
+    CROW_ROUTE(app, "/updateApptPatientId")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
+            updateAppointmentParticipantId(req, res);
+        });
+    CROW_ROUTE(app, "/updateApptDoctorId")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
+            updateAppointmentCreatedBy(req, res);
         });
     CROW_ROUTE(app, "/listAppts")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {

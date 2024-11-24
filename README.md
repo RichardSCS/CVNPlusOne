@@ -75,6 +75,8 @@ CREATE TABLE `appointment` (
   `id` varchar(150) NOT NULL,
   `title` varchar(150) NOT NULL,
   `location` varchar(150) NOT NULL,
+  `createdBy` varchar(150) NOT NULL,
+  `participantId` varchar(150) NOT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
   PRIMARY KEY (`id`)

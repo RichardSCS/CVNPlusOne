@@ -13,15 +13,18 @@
  * @param startTime     The start time of the appointment.
  * @param endTime       The end time of the appointment.
  * @param location      The location of the appointment.
+ * @param participantId     Patient of the appointment.
+ * @param createdBy      Doctor of the appointment.
  */
-Appointment::Appointment(const std::string& code, const std::string& title, time_t startTime, time_t endTime, const std::string& location)
-    : code(code), title(title), startTime(startTime), endTime(endTime), location(location) {}
+
+Appointment::Appointment(const std::string &code, const std::string &title, time_t startTime, time_t endTime, const std::string &location, const std::string &participantId, const std::string &createdBy)
+    : code(code), title(title), startTime(startTime), endTime(endTime), location(location), participantId(participantId), createdBy(createdBy) {}
 
 /**
  * Constructs a default Course object with the default parameters.
  *
  */
-Appointment::Appointment() : code(""), title(""), startTime(0), endTime(0), location("") {}
+Appointment::Appointment() : code(""), title(""), startTime(0), endTime(0), location(""), participantId(""), createdBy("") {}
 
 const std::string& Appointment::getApptTitle() const {
     return title;
@@ -41,6 +44,14 @@ const time_t Appointment::getApptEndTime() const {
 
 const std::string& Appointment::getApptLocation() const {
     return location;
+}
+
+const std::string& Appointment::getParticipantId() const {
+    return participantId;
+}
+
+const std::string& Appointment::getCreatedBy() const {
+    return createdBy;
 }
 
 std::string Appointment::display() const {
@@ -78,12 +89,12 @@ void Appointment::setTitle(const std::string &newTitle) {
     title = newTitle;
 }
 
-void Appointment::addParticipant(const std::string &newParticipant) {
-    participants.insert(newParticipant);
+void Appointment::setParticipantId(const std::string &newParticipant) {
+    participantId = newParticipant;
 }
 
-void Appointment::removeParticipant(const std::string &participant) {
-    participants.erase(participant);
+void Appointment::setCreatedBy(const std::string &newCreatedBy) {
+    createdBy = newCreatedBy;
 }
 
 void Appointment::serialize(std::ostream& out) const {
@@ -102,6 +113,13 @@ void Appointment::serialize(std::ostream& out) const {
     out.write(reinterpret_cast<const char*>(&locationLen), sizeof(locationLen));
     out.write(location.c_str(), locationLen);
 
+    size_t patientIdLen = participantId.length();
+    out.write(reinterpret_cast<const char*>(&patientIdLen), sizeof(patientIdLen));
+    out.write(participantId.c_str(), patientIdLen);
+
+    size_t doctorIdLen = createdBy.length();
+    out.write(reinterpret_cast<const char*>(&doctorIdLen), sizeof(doctorIdLen));
+    out.write(createdBy.c_str(), doctorIdLen);
 }
 
 void Appointment::deserialize(std::istream& in) {
@@ -122,4 +140,14 @@ void Appointment::deserialize(std::istream& in) {
     in.read(reinterpret_cast<char*>(&locationLen), sizeof(locationLen));
     location.resize(locationLen);
     in.read(&location[0], locationLen);
+
+    size_t patientIdLen;
+    in.read(reinterpret_cast<char*>(&patientIdLen), sizeof(patientIdLen));
+    participantId.resize(patientIdLen);
+    in.read(&participantId[0], patientIdLen);
+
+    size_t doctorIdLen;
+    in.read(reinterpret_cast<char*>(&doctorIdLen), sizeof(doctorIdLen));
+    createdBy.resize(doctorIdLen);
+    in.read(&createdBy[0], doctorIdLen);
 }

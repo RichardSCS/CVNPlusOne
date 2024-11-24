@@ -61,7 +61,7 @@ std::vector<crow::HTTPMethod> RouteControllerUnitTests::methods = {crow::HTTPMet
 TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {    
     crow::request request;
     crow::response response;
-    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&location=Pharmacy"};
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&location=Pharmacy&participantId=patient1&createdBy=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(201, response.code);
     ASSERT_EQ("Appointment Created", response.body.substr(0,19));
@@ -70,16 +70,34 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {
 TEST_F(RouteControllerUnitTests, CreateAppointmentMissingTitle) {    
     crow::request request;
     crow::response response;
-    request.url_params = crow::query_string{"?startTime=1730383200&endTime=1730383800&location=Pharmacy"};
+    request.url_params = crow::query_string{"?startTime=1730383200&endTime=1730383800&location=Pharmacy&participantId=patient1&createdBy=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(400, response.code);
     ASSERT_EQ("Missing appointment title", response.body);
 }
 
+TEST_F(RouteControllerUnitTests, CreateAppointmentMissingPatientId) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&location=Pharmacy&createdBy=doctor1"};
+    routeController->createAppointment(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment participantId", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, CreateAppointmentMissingDoctorId) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&location=Pharmacy&participantId=patient1"};
+    routeController->createAppointment(request, response);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appointment createdBy", response.body);
+}
+
 TEST_F(RouteControllerUnitTests, CreateAppointmentMissingStartTime) {    
     crow::request request;
     crow::response response;
-    request.url_params = crow::query_string{"?title=Meeting&endTime=1730383800&location=Pharmacy"};
+    request.url_params = crow::query_string{"?title=Meeting&endTime=1730383800&location=Pharmacy&participantId=patient1&createdBy=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(400, response.code);
     ASSERT_EQ("Missing appointment startTime", response.body);
@@ -88,7 +106,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentMissingStartTime) {
 TEST_F(RouteControllerUnitTests, CreateAppointmentMissingEndTime) {    
     crow::request request;
     crow::response response;
-    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&location=Pharmacy"};
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&location=Pharmacy&participantId=patient1&createdBy=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(400, response.code);
     ASSERT_EQ("Missing appointment endTime", response.body);
@@ -97,7 +115,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentMissingEndTime) {
 TEST_F(RouteControllerUnitTests, CreateAppointmentMissingLocation) {    
     crow::request request;
     crow::response response;
-    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800"};
+    request.url_params = crow::query_string{"?title=Meeting&startTime=1730383200&endTime=1730383800&participantId=patient1&createdBy=doctor1"};
     routeController->createAppointment(request, response);
     ASSERT_EQ(201, response.code);
     ASSERT_EQ("Appointment Created", response.body.substr(0,19));
@@ -112,43 +130,55 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentEmptyValues) {
     ASSERT_EQ("Missing appointment title", res.body);
 
     res.clear();
-    req.url_params = crow::query_string("?title=");
+    req.url_params = crow::query_string("?title=&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Empty query string value not allowed.");
 
     res.clear();
-    req.url_params = crow::query_string("?title=sample&startTime=notanumber");
+    req.url_params = crow::query_string("?title=sample&participantId=&createdBy=doctor1");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&participantId=patient1&createdBy=");
+    routeController->createAppointment(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?title=sample&startTime=notanumber&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Time value must be a whole number.");
 
     res.clear();
-    req.url_params = crow::query_string("?title=sample&startTime=");
+    req.url_params = crow::query_string("?title=sample&startTime=&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Empty query string value not allowed.");
 
     res.clear();
-    req.url_params = crow::query_string("?title=sample&startTime=11111&endTime=");
+    req.url_params = crow::query_string("?title=sample&startTime=11111&endTime=&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Empty query string value not allowed.");
 
     res.clear();
-    req.url_params = crow::query_string("?title=sample&startTime=11111&endTime=notanumber");
+    req.url_params = crow::query_string("?title=sample&startTime=11111&endTime=notanumber&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Time value must be a whole number.");
 
     res.clear();
-    req.url_params = crow::query_string("?title=sample&startTime=111&endTime=11");
+    req.url_params = crow::query_string("?title=sample&startTime=111&endTime=11&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "End time cannot be before Start time.");
 
     res.clear();
-    req.url_params = crow::query_string("?title=Office&startTime=10&endTime=10");
+    req.url_params = crow::query_string("?title=Office&startTime=10&endTime=10&participantId=patient1&createdBy=doctor1");
     routeController->createAppointment(req, res);
     ASSERT_EQ(res.code, 201);
     ASSERT_EQ("Appointment Created", res.body.substr(0,19));
@@ -301,6 +331,42 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleTestFail) {
     crow::response response;
     request.url_params = crow::query_string{"?apptCode=APPT133&apptTitle=PT Appointment"};
     routeController->updateAppointmentTitle(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentPatientIdTest) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT2&apptParticipantId=newParticipant"};
+    routeController->updateAppointmentParticipantId(request, response);
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Appointment participantId successfully updated.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentPatientIdTestFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT133&apptParticipantId=newParticipant"};
+    routeController->updateAppointmentParticipantId(request, response);
+    ASSERT_EQ(404, response.code);
+    ASSERT_EQ("Appointment Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentDoctorIdTest) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT2&apptCreatedBy=newCreatedBy"};
+    routeController->updateAppointmentCreatedBy(request, response);
+    ASSERT_EQ(200, response.code);
+    ASSERT_EQ("Appointment createdBy successfully updated.", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentDoctorIdTestFail) {    
+    crow::request request;
+    crow::response response;
+    request.url_params = crow::query_string{"?apptCode=APPT133&apptCreatedBy=newCreatedBy"};
+    routeController->updateAppointmentCreatedBy(request, response);
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Appointment Not Found", response.body);
 }

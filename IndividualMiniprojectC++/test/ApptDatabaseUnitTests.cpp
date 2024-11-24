@@ -34,14 +34,25 @@ TEST_F(ApptDatabaseUnitTests, SaveApptAndLoadDbTest) {
     std::map<std::string, Appointment> apptMapping = testMyFileDatabase->getAppointmentMapping();
     auto it = apptMapping.find(apptCode);
     ASSERT_EQ(it, apptMapping.end());
+    std::cout << "Verified that appointment with code " << apptCode << " does not exist initially." << std::endl;
 
-    Appointment* testAppointment = new Appointment(apptCode, "DB Test Appointment 1", 1729681200, 1729681800, "Dentist Office");
+    Appointment* testAppointment = new Appointment(apptCode, "DB Test Appointment 1", 1729681200, 1729681800, "Dentist Office", "patient1", "doctor1");
     testApptDatabase->saveApptToDatabase(*testAppointment);
+
+    std::cout << "Saved appointment to database." << std::endl;
+
     testApptDatabase->loadContentsFromDatabase(testMyFileDatabase);
+    std::cout << "Loaded contents from database into testMyFileDatabase." << std::endl;
 
     apptMapping = testMyFileDatabase->getAppointmentMapping();
+    std::cout << "Appointments in mapping after loading:" << std::endl;
+    for (const auto& appt : apptMapping) {
+        std::cout << appt.first << ": " << appt.second.getApptTitle() << std::endl;
+    }
+
     it = apptMapping.find(apptCode);
     ASSERT_NE(it, apptMapping.end());
+    std::cout << "Verified that appointment with code " << apptCode << " now exists in the mapping." << std::endl;
 }
 
 TEST_F(ApptDatabaseUnitTests, SaveContentsAndLoadDbTest) {
@@ -50,7 +61,7 @@ TEST_F(ApptDatabaseUnitTests, SaveContentsAndLoadDbTest) {
     auto it = apptMapping.find(apptCode);
     ASSERT_EQ(it, apptMapping.end());
 
-    Appointment* testAppointment = new Appointment(apptCode, "DB Test Appointment 2", 1729681200, 1729681800, "Podiatrist Office");
+    Appointment* testAppointment = new Appointment(apptCode, "DB Test Appointment 2", 1729681200, 1729681800, "Podiatrist Office", "patient2", "doctor2");
     apptMapping[apptCode] = *testAppointment;
     testApptDatabase->saveContentsToDatabase(apptMapping);
 

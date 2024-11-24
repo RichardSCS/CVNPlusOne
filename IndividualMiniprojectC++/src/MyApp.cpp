@@ -59,12 +59,14 @@ void MyApp::resetDataFile() {
     const time_t times[] = {1730383200, 1730386800, 1730383500, 1730387800, 1730383700, 1730389800};
     const std::string types[] = {"Doctor Appointment", "Diagnostic Test", "Prescription Refill"};
     const std::string locations[] = {"Clinic", "Hospital", "Pharmacy"};
+    const std::string patientIds[] = {"Patient1", "Patient2", "Patient3"};
+    const std::string doctorIds[] = {"Doctor1", "Doctor2", "Doctor3"};
 
-    Appointment appt1("APPT1", types[0], times[0], times[1], locations[0]);
+    Appointment appt1("APPT1", types[0], times[0], times[1], locations[0], patientIds[0], doctorIds[0]);
 
-    Appointment appt2("APPT2", types[1], times[2], times[3], locations[1]);
+    Appointment appt2("APPT2", types[1], times[2], times[3], locations[1], patientIds[1], doctorIds[1]);
 
-    Appointment appt3("APPT3", types[2], times[4], times[5], locations[2]);
+    Appointment appt3("APPT3", types[2], times[4], times[5], locations[2], patientIds[2], doctorIds[2]);
 
     // Setup mapping
     std::map<std::string, Appointment> apptMapping;
