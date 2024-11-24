@@ -17,9 +17,10 @@ class DoctorClient {
         void displayAppointmentDetails();
         void displayAppointmentDetail(const std::string& code);
         std::string deleteAppointment(const std::string& code);
-        std::string createAppointment(const std::string& title, int startTime, int endTime, const std::string& location);
+        std::string createAppointment(const std::string& title, int startTime, int endTime, const std::string& location, const std::string& participantId, const std::string& createdBy);
         std::string updateAppointmentTitle(const std::string& code, const std::string& title);
         std::string updateAppointmentLocation(const std::string& code, const std::string& location);
+        std::string updateAppointmentParticipantId(const std::string& code, const std::string& newParticipant);
         std::string updateAppointmentTime(const std::string& code,int startTime, int endTime);
 };
 

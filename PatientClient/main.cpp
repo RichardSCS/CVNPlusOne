@@ -22,12 +22,10 @@ void signalHandler(int signal) {
 void showMenu() {
     std::cout << "=================\n";
     std::cout << "Select an option:\n";
-    std::cout << "1. Create an appointment\n";
-    std::cout << "2. Get all appointment codes\n";
-    std::cout << "3. Get details for a specific appointment\n";
-    std::cout << "4. Get details for all appointments\n";
-    std::cout << "5. Delete an appointment\n";
-    std::cout << "6. Exit\n";
+    std::cout << "1. Get all appointment codes\n";
+    std::cout << "2. Get details for a specific appointment\n";
+    std::cout << "3. Get details for all appointments\n";
+    std::cout << "4. Exit\n";
 }
 
 /**
@@ -42,6 +40,21 @@ int main(int argc, char* argv[]) {
     if (baseUrl.empty()) {
         baseUrl = "http://127.0.0.1:8080";
         std::cout << "Using local base URL http://127.0.0.1:8080\n\n";
+    }
+
+    std::string participantId;
+    bool isValid = false;
+
+    while (!isValid) {
+        std::cout << "Enter your user ID (cannot be empty): ";
+        std::getline(std::cin, participantId);
+
+        if (!participantId.empty()) {
+            isValid = true;
+            std::cout << "User ID set to: " << participantId << "\n\n";
+        } else {
+            std::cout << "Invalid input. User ID cannot be empty. Please try again.\n";
+        }
     }
 
     PatientClient client(baseUrl);
@@ -66,48 +79,18 @@ int main(int argc, char* argv[]) {
         } 
     
         switch (choice) {
-            case 1: {
-                std::string title, location;
-                int startTime, endTime;
-
-                std::cout << "Enter appointment title: ";
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::getline(std::cin, title);
-
-                std::cout << "Enter start time (UNIX timestamp): ";
-                while (!(std::cin >> startTime)) {
-                    std::cout << "Invalid input. Please enter a valid integer for start time: ";
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                }
-
-                std::cout << "Enter end time (UNIX timestamp): ";
-                std::cin >> endTime;
-
-                std::cout << "Enter appointment location: ";
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::getline(std::cin, location);
-
-                client.createAppointment(title, startTime, endTime, location);
-                break;
-            }
-            case 2:
+            case 1:
                 client.displayAllAppointmentCodes();
                 break;
-            case 3:
+            case 2:
                 std::cout << "Enter appointment code: ";
                 std::cin >> apptCode;
                 client.displayAppointmentDetail(apptCode);
                 break;
-            case 4:
+            case 3:
                 client.displayAllAppointmentDetails();
                 break;
-            case 5:
-                std::cout << "Enter appointment code: ";
-                std::cin >> apptCode;
-                client.deleteAppointment(apptCode);
-                break;
-            case 6:
+            case 4:
                 std::cout << "Exiting program\n";
                 return 0;
             default:
