@@ -42,10 +42,12 @@ bool ApptDatabase::executeQuery(std::string sql_query) {
 }
 
 void ApptDatabase::saveApptToDatabase(const Appointment& appt) {
-    std::string query = "REPLACE INTO appointment (id, title, location, start_time, end_time) VALUES ('";
+    std::string query = "REPLACE INTO appointment (id, title, location, participantId, createdBy, start_time, end_time) VALUES ('";
     query += appt.getApptCode() + "', '";
     query += appt.getApptTitle() + "', '";
-    query += appt.getApptLocation() + "', ";
+    query += appt.getApptLocation() + "', '";
+    query += appt.getParticipantId() + "', '";
+    query += appt.getCreatedBy() + "', ";
     query += "FROM_UNIXTIME(" + std::to_string(appt.getApptStartTime()) + "), ";
     query += "FROM_UNIXTIME(" + std::to_string(appt.getApptEndTime()) + ") );";
     executeQuery(query);
@@ -70,7 +72,7 @@ void ApptDatabase::wipeDatabase() {
 }
 
 void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
-    std::string query = "SELECT id, title, UNIX_TIMESTAMP(start_time) AS start_time, UNIX_TIMESTAMP(end_time) AS end_time, location FROM appointment;";
+        std::string query = "SELECT id, title, UNIX_TIMESTAMP(start_time) AS start_time, UNIX_TIMESTAMP(end_time) AS end_time, location, participantId, createdBy FROM appointment;";
 
     try {
         sql::Driver *driver = get_driver_instance();
@@ -85,8 +87,10 @@ void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
             std::string start_time = result->getString("start_time");
             std::string end_time = result->getString("end_time");
             std::string location = result->getString("location");
+            std::string participantId = result->getString("participantId");
+            std::string createdBy= result->getString("createdBy");
 
-            Appointment appt(id, title, std::stoi(start_time), std::stoi(end_time), location);
+            Appointment appt(id, title, std::stoi(start_time), std::stoi(end_time), location, participantId, createdBy);
             appointmentMapping[id] = appt;
             //std::cout << "Loading Appt [" << id << "] from database" << std::endl;
             myFileDatabase->setApptMapping(appointmentMapping);

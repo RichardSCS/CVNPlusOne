@@ -24,8 +24,8 @@ class RouteController {
         void updateAppointmentTime(const crow::request& req, crow::response& res);
         void updateAppointmentTitle(const crow::request& req, crow::response& res);
         void updateAppointmentLocation(const crow::request& req, crow::response& res);
-        void updateAppointmentPatientId(const crow::request& req, crow::response& res);
-        void updateAppointmentDoctorId(const crow::request& req, crow::response& res);
+        void updateAppointmentParticipantId(const crow::request& req, crow::response& res);
+        void updateAppointmentCreatedBy(const crow::request& req, crow::response& res);
         void listAppointments(const crow::request& req, crow::response& res);
 
     protected:

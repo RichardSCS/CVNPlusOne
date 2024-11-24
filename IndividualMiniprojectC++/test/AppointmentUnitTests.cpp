@@ -43,15 +43,15 @@ TEST_F(AppointmentUnitTests, UpdateLocationTest) {
 }
 
 TEST_F(AppointmentUnitTests, UpdatePatientIdTest) {
-    ASSERT_EQ("Patient1", testAppointment->getPatientId());
-    testAppointment->setPatientId("newPatient");
-    ASSERT_EQ("newPatient", testAppointment->getPatientId());
+    ASSERT_EQ("Patient1", testAppointment->getParticipantId());
+    testAppointment->setParticipantId("newParticipant");
+    ASSERT_EQ("newParticipant", testAppointment->getParticipantId());
 }
 
 TEST_F(AppointmentUnitTests, UpdateDoctorIdTest) {
-    ASSERT_EQ("Doctor1", testAppointment->getDoctorId());
-    testAppointment->setDoctorId("newDoctor");
-    ASSERT_EQ("newDoctor", testAppointment->getDoctorId());
+    ASSERT_EQ("Doctor1", testAppointment->getCreatedBy());
+    testAppointment->setCreatedBy("newCreatedBy");
+    ASSERT_EQ("newCreatedBy", testAppointment->getCreatedBy());
 }
 
 TEST_F(AppointmentUnitTests, UpdateTimeTest) {
