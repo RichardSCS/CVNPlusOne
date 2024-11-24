@@ -105,13 +105,7 @@ void PatientClient::displayAllAppointmentDetails() {
 }
 
 void PatientClient::displayAppointmentDetail(const std::string& code) {
-    auto it = std::find(PatientClient::createdAppointments.begin(), PatientClient::createdAppointments.end(), code);
-    
-    if (it != PatientClient::createdAppointments.end()) {
-        std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
-    } else {
-        std::cout << "Appointment " << code << " not found\n";
-    }
+    std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
 }
 
 std::string PatientClient::deleteAppointment(const std::string& code) {

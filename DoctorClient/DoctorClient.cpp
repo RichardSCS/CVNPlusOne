@@ -11,19 +11,13 @@ std::vector<std::string> DoctorClient::getAppointmentCodes() {
     std::vector<std::string> codes;
 
     if (response.code == 200) {
-        Json::Value jsonData;
-        Json::Reader jsonReader;
-        
-        if (jsonReader.parse(response.body, jsonData)) {
-            if (jsonData.isArray()) {
-                for (const auto& item : jsonData) {
-                    codes.push_back(item.asString());
-                }
-            } else {
-                std::cerr << "Unexpected JSON format: Expected an array\n";
+        std::istringstream stream(response.body);
+        std::string line;
+
+        while (std::getline(stream, line)) {
+            if (!line.empty()) {
+                codes.push_back(line);
             }
-        } else {
-            std::cerr << "Failed to parse JSON response\n";
         }
     } else {
         std::cerr << "Failed to retrieve appointment codes. HTTP code: " << response.code << "\n";
@@ -57,16 +51,20 @@ std::string encodeURIComponent(std::string decoded) {
     return oss.str();
 }
 
-std::string DoctorClient::createAppointment(const std::string& title, int startTime, int endTime, const std::string& location) {
+std::string DoctorClient::createAppointment(const std::string& title, int startTime, int endTime, const std::string& location, const std::string& participantId, const std::string& createdBy) {
     std::string encodedTitle = encodeURIComponent(title);
     std::string encodedLocation = encodeURIComponent(location);
+    std::string encodedParticipantId = encodeURIComponent(participantId);
+    std::string encodedCreatedBy = encodeURIComponent(createdBy);
 
     std::ostringstream urlBuilder;
     urlBuilder << baseUrl << "/createAppt?"
                 << "title=" << encodedTitle
                 << "&startTime=" << startTime
                 << "&endTime=" << endTime
-                << "&location=" << encodedLocation;
+                << "&location=" << encodedLocation
+                << "&participantId=" << encodedParticipantId
+                << "&createdBy=" << encodedCreatedBy;
 
     std::cout << urlBuilder.str() << std::endl;
     RestClient::Response response = RestClient::post(urlBuilder.str(), "application/json", "");
@@ -83,9 +81,7 @@ std::string DoctorClient::createAppointment(const std::string& title, int startT
 }
 
 void DoctorClient::displayAllAppointmentCodes() {
-    // std::vector<std::string> codes = getAppointmentCodes();
-    // Only get patient client created appointments
-    std::vector<std::string> codes = DoctorClient::createdAppointments;
+    std::vector<std::string> codes = getAppointmentCodes();
     if (codes.empty()) {
         std::cout << "No appointment codes found\n";
     } else {
@@ -97,31 +93,20 @@ void DoctorClient::displayAllAppointmentCodes() {
 }
 
 void DoctorClient::displayAllAppointmentDetails() {
-    // auto codes = getAppointmentCodes();
-    std::vector<std::string> codes = DoctorClient::createdAppointments;
+    auto codes = getAppointmentCodes();
     for (const auto& code : codes) {
         std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
     }
 }
 
 void DoctorClient::displayAppointmentDetail(const std::string& code) {
-    auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
-    
-    if (it != DoctorClient::createdAppointments.end()) {
-        std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
-    } else {
-        std::cout << "Appointment " << code << " not found\n";
-    }
+    std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
 }
 
 std::string DoctorClient::deleteAppointment(const std::string& code) {
     RestClient::Response response = RestClient::del(baseUrl + "/deleteAppt?apptCode=" + code);
     if (response.code == 200) {
-        auto it = std::remove(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
-        if (it != DoctorClient::createdAppointments.end()) {
-            DoctorClient::createdAppointments.erase(it, DoctorClient::createdAppointments.end());
-            std::cout << "Appointment " << code << " deleted successfully\n";
-        }
+        std::cout << "Appointment " << code << " deleted successfully\n";
         return response.body;
     } else {
         std::cerr << "Failed to delete appointment " << code << ". HTTP code: " << response.code << "\n";
@@ -142,11 +127,6 @@ std::string DoctorClient::updateAppointmentTitle(const std::string& code, const 
     RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
 
     if (response.code == 200) {
-        auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
-        if (it == DoctorClient::createdAppointments.end()) {
-            std::string apptCode = response.body.substr(response.body.find("APPT"));
-            DoctorClient::createdAppointments.push_back(apptCode);
-        }
         std::cout << "Appointment " << code << " title updated successfully\n";
         return response.body;
     } else {
@@ -168,11 +148,27 @@ std::string DoctorClient::updateAppointmentLocation(const std::string& code, con
     RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
 
     if (response.code == 200) {
-        auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
-        if (it == DoctorClient::createdAppointments.end()) {
-            std::string apptCode = response.body.substr(response.body.find("APPT"));
-            DoctorClient::createdAppointments.push_back(apptCode);
-        }
+        std::cout << "Appointment " << code << " location updated successfully\n";
+        return response.body;
+    } else {
+        std::cerr << "Failed to update appointment location " << code << ". HTTP code: " << response.code << "\n";
+        return "Appointment Not Found";
+    }
+}
+
+std::string DoctorClient::updateAppointmentParticipantId(const std::string& code, const std::string& newParticipant) {
+    std::string encodedCode = encodeURIComponent(code);
+    std::string encodedNewParticipant = encodeURIComponent(newParticipant);
+
+    std::ostringstream urlBuilder;
+    urlBuilder << baseUrl << "/updateApptParticipantId?"
+                << "apptCode=" << encodedCode
+                << "&apptParticipantId=" << encodedNewParticipant;
+
+    std::cout << urlBuilder.str() << std::endl;
+    RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
+
+    if (response.code == 200) {
         std::cout << "Appointment " << code << " location updated successfully\n";
         return response.body;
     } else {
@@ -194,11 +190,6 @@ std::string DoctorClient::updateAppointmentTime(const std::string& code, int sta
     RestClient::Response response = RestClient::patch(urlBuilder.str(), "application/json", "");
 
     if (response.code == 200) {
-        auto it = std::find(DoctorClient::createdAppointments.begin(), DoctorClient::createdAppointments.end(), code);
-        if (it == DoctorClient::createdAppointments.end()) {
-            std::string apptCode = response.body.substr(response.body.find("APPT"));
-            DoctorClient::createdAppointments.push_back(apptCode);
-        }
         std::cout << "Appointment " << code << " times updated successfully\n";
         return response.body;
     } else {
