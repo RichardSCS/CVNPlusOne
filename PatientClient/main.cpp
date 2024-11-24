@@ -42,6 +42,21 @@ int main(int argc, char* argv[]) {
         std::cout << "Using local base URL http://127.0.0.1:8080\n\n";
     }
 
+    std::string participantId;
+    bool isValid = false;
+
+    while (!isValid) {
+        std::cout << "Enter your user ID (cannot be empty): ";
+        std::getline(std::cin, participantId);
+
+        if (!participantId.empty()) {
+            isValid = true;
+            std::cout << "User ID set to: " << participantId << "\n\n";
+        } else {
+            std::cout << "Invalid input. User ID cannot be empty. Please try again.\n";
+        }
+    }
+
     PatientClient client(baseUrl);
     int choice;
     std::string apptCode;
