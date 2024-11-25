@@ -417,6 +417,11 @@ void RouteController::createAppointment(const crow::request& req, crow::response
 
 // Initialize API Routes
 void RouteController::initRoutes(crow::App<>& app) {
+    CROW_ROUTE(app, "/")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request&,
+                                                crow::response& res) {
+            index(res);
+        });
 
     CROW_ROUTE(app, "/retrieveAppt")
         .methods(crow::HTTPMethod::GET)([this](const crow::request& req, crow::response& res) {

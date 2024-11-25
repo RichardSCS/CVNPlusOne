@@ -58,6 +58,13 @@ std::vector<crow::HTTPMethod> RouteControllerUnitTests::methods = {crow::HTTPMet
                                                                    crow::HTTPMethod::PATCH,
                                                                    crow::HTTPMethod::DELETE};
 
+TEST_F(RouteControllerUnitTests, IndexEndpoint) {
+    crow::response res;
+    routeController->index(res);
+    ASSERT_EQ(res.code, 200);
+    ASSERT_EQ(res.body, "Welcome, in order to make an API call direct your browser or Postman to an endpoint \n\n This can be done using the following format: \n\n http://127.0.0.1:8080/endpoint?arg=value");
+}
+
 TEST_F(RouteControllerUnitTests, CreateAppointmentTest) {    
     crow::request request;
     crow::response response;
@@ -387,4 +394,36 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationTestFail) {
     routeController->updateAppointmentLocation(request, response);
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Appointment Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationEmptyValue) {
+    crow::request req;
+    crow::response res;
+
+    routeController->updateAppointmentLocation(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=");
+    routeController->updateAppointmentLocation(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2");
+    routeController->updateAppointmentLocation(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&apptLocation=");
+    routeController->updateAppointmentLocation(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&apptLocation=newLocation");
+    req.url = "/updateApptLocation";
+    testMethods(&req, &res, {crow::HTTPMethod::PATCH});
 }
