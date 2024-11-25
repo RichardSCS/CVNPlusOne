@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     
         switch (choice) {
             case 1:
-                client.displayAllAppointmentCodes();
+                client.displayAllAppointmentCodes(participantId);
                 break;
             case 2:
                 std::cout << "Enter appointment code: ";
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
                 client.displayAppointmentDetail(apptCode);
                 break;
             case 3:
-                client.displayAllAppointmentDetails();
+                client.displayAllAppointmentDetails(participantId);
                 break;
             case 4:
                 std::cout << "Exiting program\n";
