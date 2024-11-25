@@ -199,23 +199,17 @@ void RouteController::updateAppointmentCreatedBy(const crow::request& req, crow:
 void RouteController::listAppointments(const crow::request& req, crow::response& res) {
     try {
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
-        
-        std::string appointmentList = "[";
-        bool first = true;
 
-        for (const auto& appt : appointmentMapping) {
-            if (!first) {
-                appointmentList += ", ";
+        if (appointmentMapping.empty()) {
+            res.code = 404;
+            res.write("No appointments found.");
+        } else {
+            res.code = 200;
+
+            for (const auto& pair : appointmentMapping) {
+                res.write(pair.first + "\n");
             }
-            appointmentList += "\"" + appt.first + "\"";
-            first = false;
         }
-
-        appointmentList += "]";
-
-        res.code = 200;
-        res.set_header("Content-Type", "application/json");
-        res.write(appointmentList);
         res.end();
     } catch (const std::exception& e) {
         res = handleException(e);
@@ -450,11 +444,11 @@ void RouteController::initRoutes(crow::App<>& app) {
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
             updateAppointmentLocation(req, res);
         });
-    CROW_ROUTE(app, "/updateApptPatientId")
+    CROW_ROUTE(app, "/updateApptParticipantId")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
             updateAppointmentParticipantId(req, res);
         });
-    CROW_ROUTE(app, "/updateApptDoctorId")
+    CROW_ROUTE(app, "/updateApptCreatedBy")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request& req, crow::response& res) {
             updateAppointmentCreatedBy(req, res);
         });
