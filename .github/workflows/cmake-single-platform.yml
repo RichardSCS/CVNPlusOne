@@ -102,23 +102,3 @@ jobs:
     - name: cppcheck
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: make cppcheck
-
-name: Automated API tests using Postman CLI
-
-on: push
-
-jobs:
-  automated-api-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Postman CLI
-        run: |
-          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-      - name: Login to Postman CLI
-        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
-      - name: Run API tests
-        run: |
-          postman collection run "38354076-fa74d93a-1ef6-47a7-b801-fa1aa9344a47"
-          # Lint your API using Postman CLI
-          postman api lint 09a82e04-388c-40fe-98e1-7ff9940b76ee
