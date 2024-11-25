@@ -6,8 +6,8 @@
 
 PatientClient::PatientClient(const std::string& baseUrl) : baseUrl(baseUrl), createdAppointments() {}
 
-std::vector<std::string> PatientClient::getAppointmentCodes() {
-    RestClient::Response response = RestClient::get(baseUrl + "/listAppts");
+std::vector<std::string> PatientClient::getAppointmentCodes(const std::string& participantId) {
+    RestClient::Response response = RestClient::get(baseUrl + "/listAppts?createdBy=" + participantId);
     std::vector<std::string> codes;
 
     if (response.code == 200) {
@@ -76,9 +76,9 @@ std::string PatientClient::createAppointment(const std::string& title, int start
     }
 }
 
-void PatientClient::displayAllAppointmentCodes() {
+void PatientClient::displayAllAppointmentCodes(const std::string& participantId) {
     // Get all the appts existed in the DB
-    std::vector<std::string> codes = getAppointmentCodes();
+    std::vector<std::string> codes = getAppointmentCodes(participantId);
     if (codes.empty()) {
         std::cout << "No appointment codes found\n";
     } else {
@@ -89,9 +89,9 @@ void PatientClient::displayAllAppointmentCodes() {
     }
 }
 
-void PatientClient::displayAllAppointmentDetails() {
+void PatientClient::displayAllAppointmentDetails(const std::string& participantId) {
     // Get all the appts existed in the DB
-    std::vector<std::string> codes = getAppointmentCodes();
+    std::vector<std::string> codes = getAppointmentCodes(participantId);
     for (const auto& code : codes) {
         std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
     }
