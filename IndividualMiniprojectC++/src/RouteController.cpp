@@ -87,20 +87,23 @@ void RouteController::retrieveAppointment(const crow::request& req, crow::respon
 
 void RouteController::updateAppointmentTitle(const crow::request& req, crow::response& res) {
     try {
-        auto apptCode = req.url_params.get("apptCode");
-        auto apptTitle = req.url_params.get("apptTitle");
-        if (!apptCode) {
+        auto apptCodeParam = req.url_params.get("apptCode");
+        auto apptTitleParam = req.url_params.get("apptTitle");
+        if (!apptCodeParam) {
             res.code = 400; 
             res.write("Missing appointment code");
             res.end();
             return;
         }
-        if (!apptTitle) {
+        if (!apptTitleParam) {
             res.code = 400; 
             res.write("Missing appointment title");
             res.end();
             return;
         }
+
+        std::string apptCode = apptCodeParam;
+        std::string apptTitle = apptTitleParam;
 
         if (isStrEmpty(apptCode, res) || isStrEmpty(apptTitle, res)) {
             res.end();

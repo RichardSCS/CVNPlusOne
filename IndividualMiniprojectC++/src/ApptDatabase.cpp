@@ -38,7 +38,7 @@ void ApptDatabase::saveApptToDatabase(const Appointment& appt) {
     }
 
     try {
-        std::string query = "REPLACE INTO appointment (id, title, location, participantId, createdBy, start_time, end_time) VALUES (?, ?, ?, ?, ? ";
+        std::string query = "REPLACE INTO appointment (id, title, location, participantId, createdBy, start_time, end_time) VALUES (?, ?, ?, ?, ?, ";
         query += "FROM_UNIXTIME(" + std::to_string(appt.getApptStartTime()) + "), ";
         query += "FROM_UNIXTIME(" + std::to_string(appt.getApptEndTime()) + ") );";
 
