@@ -9,7 +9,15 @@ Install the required libraries:
         brew install restclient-cpp
 
         In Ubuntu:
-        https://packagecloud.io/mrtazz/restclient-cpp
+        git clone https://github.com/mrtazz/restclient-cpp.git
+        cd restclient-cpp
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo make install
+
+        Verify installation: ls /usr/local/lib | grep restclient
     jsoncpp:
         In Macos:
         brew install jsoncpp

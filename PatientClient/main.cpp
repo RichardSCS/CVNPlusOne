@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <limits>
 #include <csignal>
 #include "restclient-cpp/restclient.h"
 #include "PatientClient.h"
