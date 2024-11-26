@@ -4,6 +4,7 @@
 #include "cppconn/exception.h"
 #include "cppconn/resultset.h"
 #include "cppconn/statement.h"
+#include "cppconn/prepared_statement.h"
 #include <map>
 #include <string>
 
@@ -26,6 +27,9 @@ class ApptDatabase {
         std::string dbpw = "";
         int codeCount = 0;
         bool executeQuery(std::string sql_query);
+
+        sql::Driver *m_driver = nullptr;
+        sql::Connection *m_connection = nullptr;
 };
 
 #endif

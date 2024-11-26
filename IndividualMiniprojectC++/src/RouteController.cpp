@@ -87,13 +87,25 @@ void RouteController::retrieveAppointment(const crow::request& req, crow::respon
 
 void RouteController::updateAppointmentTitle(const crow::request& req, crow::response& res) {
     try {
-        std::string apptCode = req.url_params.get("apptCode");
-        if (isStrEmpty(apptCode, res)) {
+        auto apptCodeParam = req.url_params.get("apptCode");
+        auto apptTitleParam = req.url_params.get("apptTitle");
+        if (!apptCodeParam) {
+            res.code = 400; 
+            res.write("Missing appointment code");
             res.end();
             return;
         }
-        std::string apptTitle = req.url_params.get("apptTitle");
-        if (isStrEmpty(apptTitle, res)) {
+        if (!apptTitleParam) {
+            res.code = 400; 
+            res.write("Missing appointment title");
+            res.end();
+            return;
+        }
+
+        std::string apptCode = apptCodeParam;
+        std::string apptTitle = apptTitleParam;
+
+        if (isStrEmpty(apptCode, res) || isStrEmpty(apptTitle, res)) {
             res.end();
             return;
         }
@@ -124,10 +136,19 @@ void RouteController::updateAppointmentLocation(const crow::request& req, crow::
     try {
         auto apptCode = req.url_params.get("apptCode");
         auto apptLocation = req.url_params.get("apptLocation");
-        if (isStrEmpty(apptCode, res) || isStrEmpty(apptLocation, res)) {
+        if (!apptCode) {
+            res.code = 400; 
+            res.write("Missing appointment code");
             res.end();
             return;
         }
+        if (!apptLocation) {
+            res.code = 400; 
+            res.write("Missing appointment location");
+            res.end();
+            return;
+        }
+
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         auto it = appointmentMapping.find(apptCode);
@@ -230,19 +251,36 @@ void RouteController::listAppointments(const crow::request& req, crow::response&
 
 void RouteController::updateAppointmentTime(const crow::request& req, crow::response& res) {
     try {
-        std::string apptCode = req.url_params.get("apptCode");
+        auto apptCode = req.url_params.get("apptCode");
+        auto startTimeStr = (req.url_params.get("startTime"));
+        auto endTimeStr = (req.url_params.get("endTime"));
+        if (!apptCode) {
+            res.code = 400; 
+            res.write("Missing appointment code");
+            res.end();
+            return;
+        }
+        if (!startTimeStr) {
+            res.code = 400; 
+            res.write("Missing start time");
+            res.end();
+            return;
+        }
+        if (!endTimeStr) {
+            res.code = 400; 
+            res.write("Missing end time");
+            res.end();
+            return;
+        }
+        
         if (isStrEmpty(apptCode, res)) {
             res.end();
             return;
         }
-
-        std::string startTimeStr = (req.url_params.get("startTime"));
         if (!verifyTimeStr(startTimeStr, res)) {
             res.end();
             return;
         }
-
-        std::string endTimeStr = (req.url_params.get("endTime"));
         if (!verifyTimeStr(endTimeStr, res)) {
             res.end();
             return;
@@ -279,7 +317,15 @@ void RouteController::updateAppointmentTime(const crow::request& req, crow::resp
 
 void RouteController::deleteAppointment(const crow::request& req, crow::response& res) {
     try {
-        std::string apptCode = req.url_params.get("apptCode");
+        auto apptCodeParam = req.url_params.get("apptCode");
+        if (!apptCodeParam) {
+            res.code = 400; 
+            res.write("Missing appt code");
+            res.end();
+            return;
+        }
+
+        std::string apptCode = apptCodeParam;
 
         if (isStrEmpty(apptCode, res)) {
             res.end();

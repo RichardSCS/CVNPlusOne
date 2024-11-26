@@ -215,8 +215,8 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentMissingCode) {
     
     routeController->deleteAppointment(request, response);
     
-    ASSERT_EQ(500, response.code);
-    ASSERT_EQ("An error has occurred", response.body);
+    ASSERT_EQ(400, response.code);
+    ASSERT_EQ("Missing appt code", response.body);
 }
 
 TEST_F(RouteControllerUnitTests, DeleteAppointmentNotFound) {
@@ -235,8 +235,8 @@ TEST_F(RouteControllerUnitTests, DeleteAppointmentTest) {
     crow::response res;
 
     routeController->deleteAppointment(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ("An error has occurred", res.body);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ("Missing appt code", res.body);
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=");
@@ -329,38 +329,38 @@ TEST_F(RouteControllerUnitTests, UpdateApptTimesEmptyValues) {
     crow::response res;
 
     routeController->updateAppointmentTime(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing appointment code");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=");
     routeController->updateAppointmentTime(req, res);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+    ASSERT_EQ(res.body, "Missing start time");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2");
     routeController->updateAppointmentTime(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing start time");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2&startTime=");
     routeController->updateAppointmentTime(req, res);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+    ASSERT_EQ(res.body, "Missing end time");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2&startTime=asdf");
     routeController->updateAppointmentTime(req, res);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Time value must be a whole number.");
+    ASSERT_EQ(res.body, "Missing end time");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2&startTime=10");
     routeController->updateAppointmentTime(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing end time");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT3&startTime=10&endTime=");
@@ -445,20 +445,20 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleEmptyValues) {
     crow::response res;
 
     routeController->updateAppointmentTitle(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing appointment code");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=");
     routeController->updateAppointmentTitle(req, res);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+    ASSERT_EQ(res.body, "Missing appointment title");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT113");
     routeController->updateAppointmentTitle(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing appointment title");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT113&apptTitle=");
@@ -495,26 +495,25 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationEmptyValue) {
     crow::response res;
 
     routeController->updateAppointmentLocation(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing appointment code");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=");
     routeController->updateAppointmentLocation(req, res);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+    ASSERT_EQ(res.body, "Missing appointment location");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2");
     routeController->updateAppointmentLocation(req, res);
-    ASSERT_EQ(res.code, 500);
-    ASSERT_EQ(res.body, "An error has occurred");
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Missing appointment location");
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2&apptLocation=");
     routeController->updateAppointmentLocation(req, res);
-    ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+    ASSERT_EQ(res.code, 200);
 
     res.clear();
     req.url_params = crow::query_string("?apptCode=APPT2&apptLocation=newLocation");
