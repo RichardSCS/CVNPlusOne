@@ -6,8 +6,28 @@
 
 DoctorClient::DoctorClient(const std::string& baseUrl) : baseUrl(baseUrl), createdAppointments() {}
 
-std::vector<std::string> DoctorClient::getAppointmentCodes() {
-    RestClient::Response response = RestClient::get(baseUrl + "/listAppts");
+std::vector<std::string> DoctorClient::getAppointmentCodes(const std::string& createdBy) {
+    RestClient::Response response = RestClient::get(baseUrl + "/listAppts?createdBy=" + createdBy);
+    std::vector<std::string> codes;
+
+    if (response.code == 200) {
+        std::istringstream stream(response.body);
+        std::string line;
+
+        while (std::getline(stream, line)) {
+            if (!line.empty()) {
+                codes.push_back(line);
+            }
+        }
+    } else {
+        std::cerr << "Failed to retrieve appointment codes. HTTP code: " << response.code << "\n";
+    }
+
+    return codes;
+}
+
+std::vector<std::string> DoctorClient::getAppointmentCodesByParticipant(const std::string& createdBy, const std::string& participantId) {
+    RestClient::Response response = RestClient::get(baseUrl + "/listAppts?createdBy=" + createdBy + "&participantId=" + participantId);
     std::vector<std::string> codes;
 
     if (response.code == 200) {
@@ -80,8 +100,8 @@ std::string DoctorClient::createAppointment(const std::string& title, int startT
     }
 }
 
-void DoctorClient::displayAllAppointmentCodes() {
-    std::vector<std::string> codes = getAppointmentCodes();
+void DoctorClient::displayAllAppointmentCodes(const std::string& createdBy) {
+    std::vector<std::string> codes = getAppointmentCodes(createdBy);
     if (codes.empty()) {
         std::cout << "No appointment codes found\n";
     } else {
@@ -92,8 +112,15 @@ void DoctorClient::displayAllAppointmentCodes() {
     }
 }
 
-void DoctorClient::displayAllAppointmentDetails() {
-    auto codes = getAppointmentCodes();
+void DoctorClient::displayAllAppointmentDetails(const std::string& createdBy) {
+    auto codes = getAppointmentCodes(createdBy);
+    for (const auto& code : codes) {
+        std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
+    }
+}
+
+void DoctorClient::displayAppointmentDetailsByParticipant(const std::string& createdBy, const std::string& participantId) {
+    auto codes = getAppointmentCodesByParticipant(createdBy, participantId);
     for (const auto& code : codes) {
         std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
     }
