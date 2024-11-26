@@ -103,15 +103,6 @@ jobs:
       working-directory: ${{github.workspace}}/IndividualMiniprojectC++/build
       run: make cppcheck
 
-#name: Automated API tests using Postman CLI
-
-#on: push
-
-#jobs:
-#  automated-api-tests:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
     - name: Install Postman CLI
       run: |
         curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
