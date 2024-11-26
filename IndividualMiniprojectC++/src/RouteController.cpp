@@ -198,6 +198,8 @@ void RouteController::updateAppointmentCreatedBy(const crow::request& req, crow:
 
 void RouteController::listAppointments(const crow::request& req, crow::response& res) {
     try {
+        auto creatorId = req.url_params.get("createdBy");
+        auto participantId = req.url_params.get("participantId");
         auto appointmentMapping = myFileDatabase->getAppointmentMapping();
 
         if (appointmentMapping.empty()) {
@@ -207,6 +209,10 @@ void RouteController::listAppointments(const crow::request& req, crow::response&
             res.code = 200;
 
             for (const auto& pair : appointmentMapping) {
+                if ((creatorId && creatorId != pair.second.getCreatedBy())
+                     || (participantId && participantId != pair.second.getParticipantId()) ) {
+                    continue;
+                }
                 res.write(pair.first + "\n");
             }
         }
