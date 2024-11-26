@@ -326,6 +326,68 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentTimeTestFail2) {
     ASSERT_EQ("Failed to update appointment time.", response.body);
 }
 
+TEST_F(RouteControllerUnitTests, UpdateApptTimesEmptyValues) {
+    crow::request req;
+    crow::response res;
+
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=asdf");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Time value must be a whole number.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=10");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT3&startTime=10&endTime=");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT3&startTime=10&endTime=asdf");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Time value must be a whole number.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=100&endTime=10");
+    routeController->updateAppointmentTime(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Failed to update appointment time.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&startTime=100&endTime=1000");
+    req.url = "/updateApptTimes";
+    testMethods(&req, &res, {crow::HTTPMethod::PATCH});
+}
+
 TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleTest) {    
     crow::request request;
     crow::response response;
@@ -378,6 +440,38 @@ TEST_F(RouteControllerUnitTests, UpdateAppointmentDoctorIdTestFail) {
     routeController->updateAppointmentCreatedBy(request, response);
     ASSERT_EQ(404, response.code);
     ASSERT_EQ("Appointment Not Found", response.body);
+}
+
+TEST_F(RouteControllerUnitTests, UpdateAppointmentTitleEmptyValues) {
+    crow::request req;
+    crow::response res;
+
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=");
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT113");
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 500);
+    ASSERT_EQ(res.body, "An error has occurred");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT113&apptTitle=");
+    routeController->updateAppointmentTitle(req, res);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Empty query string value not allowed.");
+
+    res.clear();
+    req.url_params = crow::query_string("?apptCode=APPT2&apptTitle=newTitle");
+    req.url = "/updateApptTitle";
+    testMethods(&req, &res, {crow::HTTPMethod::PATCH});
 }
 
 TEST_F(RouteControllerUnitTests, UpdateAppointmentLocationTest) {    

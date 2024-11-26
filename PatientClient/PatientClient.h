@@ -10,10 +10,10 @@ class PatientClient {
     public:
         PatientClient(const std::string& baseUrl);
         
-        std::vector<std::string> getAppointmentCodes();
+        std::vector<std::string> getAppointmentCodes(const std::string& participantId);
         std::string getAppointmentDetails(const std::string& code);
-        void displayAllAppointmentCodes();
-        void displayAllAppointmentDetails();
+        void displayAllAppointmentCodes(const std::string& participantId);
+        void displayAllAppointmentDetails(const std::string& participantId);
         void displayAppointmentDetails();
         void displayAppointmentDetail(const std::string& code);
         std::string deleteAppointment(const std::string& code);

@@ -26,12 +26,13 @@ void showMenu() {
     std::cout << "2. Get all appointment codes\n";
     std::cout << "3. Get details for a specific appointment\n";
     std::cout << "4. Get details for all appointments\n";
-    std::cout << "5. Update title of an appointment\n";
-    std::cout << "6. Update location of an appointment\n";
-    std::cout << "7. Update start and end times of an appointment\n";
-    std::cout << "8. Update participant for an appointment\n";
-    std::cout << "9. Delete an appointment\n";
-    std::cout << "10. Exit\n";
+    std::cout << "5. Get details for all appointments for a patient\n";
+    std::cout << "6. Update title of an appointment\n";
+    std::cout << "7. Update location of an appointment\n";
+    std::cout << "8. Update start and end times of an appointment\n";
+    std::cout << "9. Update participant for an appointment\n";
+    std::cout << "10. Delete an appointment\n";
+    std::cout << "11. Exit\n";
 }
 
 /**
@@ -114,7 +115,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case 2:
-                client.displayAllAppointmentCodes();
+                client.displayAllAppointmentCodes(createdBy);
                 break;
             case 3:
                 std::cout << "Enter appointment code: ";
@@ -122,9 +123,18 @@ int main(int argc, char* argv[]) {
                 client.displayAppointmentDetail(apptCode);
                 break;
             case 4:
-                client.displayAllAppointmentDetails();
+                client.displayAllAppointmentDetails(createdBy);
                 break;
             case 5: {
+                std::string participantId;
+
+                std::cout << "Enter Patient id: ";
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::getline(std::cin, participantId);
+                client.displayAppointmentDetailsByParticipant(createdBy, participantId);
+                break;
+            }
+            case 6: {
                 std::string title;
 
                 std::cout << "Enter appointment code: ";
@@ -136,7 +146,7 @@ int main(int argc, char* argv[]) {
                 client.updateAppointmentTitle(apptCode, title);
                 break;
             }
-            case 6: {
+            case 7: {
                 std::string location;
 
                 std::cout << "Enter appointment code: ";
@@ -149,7 +159,7 @@ int main(int argc, char* argv[]) {
                 client.updateAppointmentLocation(apptCode, location);
                 break;
             }
-            case 7: {
+            case 8: {
                 int startTime, endTime;
 
                 std::cout << "Enter appointment code: ";
@@ -168,25 +178,25 @@ int main(int argc, char* argv[]) {
                 client.updateAppointmentTime(apptCode, startTime, endTime);
                 break;
             }
-            case 8: {
+            case 9: {
                 std::string newParticipant;
 
                 std::cout << "Enter appointment code: ";
                 std::cin >> apptCode;
 
-                std::cout << "Enter new participant: ";
+                std::cout << "Enter new Patient id: ";
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::getline(std::cin, newParticipant);
 
                 client.updateAppointmentParticipantId(apptCode, newParticipant);
                 break;
             }
-            case 9:
+            case 10:
                 std::cout << "Enter appointment code: ";
                 std::cin >> apptCode;
                 client.deleteAppointment(apptCode);
                 break;
-            case 10:
+            case 11:
                 std::cout << "Exiting program\n";
                 return 0;
             default:
