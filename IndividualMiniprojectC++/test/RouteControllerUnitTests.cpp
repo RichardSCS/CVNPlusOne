@@ -90,6 +90,7 @@ TEST_F(RouteControllerUnitTests, CreateAppointmentMissingPatientId) {
     routeController->createAppointment(request, response);
     ASSERT_EQ(400, response.code);
     ASSERT_EQ("Missing appointment participantId", response.body);
+    ASSERT_EQ(response.code, 400);
 }
 
 TEST_F(RouteControllerUnitTests, CreateAppointmentMissingDoctorId) {    
