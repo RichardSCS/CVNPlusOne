@@ -30,7 +30,7 @@ MyFileDatabase* ApptDatabaseUnitTests::testMyFileDatabase = nullptr;
 ApptDatabase* ApptDatabaseUnitTests::testApptDatabase = nullptr;
 
 TEST_F(ApptDatabaseUnitTests, SaveApptAndLoadDbTest) {
-    std::string apptCode = "APPT6";
+    std::string apptCode = "APPT666";
     std::map<std::string, Appointment> apptMapping = testMyFileDatabase->getAppointmentMapping();
     auto it = apptMapping.find(apptCode);
     ASSERT_EQ(it, apptMapping.end());
@@ -55,8 +55,38 @@ TEST_F(ApptDatabaseUnitTests, SaveApptAndLoadDbTest) {
     std::cout << "Verified that appointment with code " << apptCode << " now exists in the mapping." << std::endl;
 }
 
+TEST_F(ApptDatabaseUnitTests, SaveApptAndLoadDbTestEmptyStrings) {
+    std::string apptCode = "APPT777";
+    std::map<std::string, Appointment> apptMapping = testMyFileDatabase->getAppointmentMapping();
+    auto it = apptMapping.find(apptCode);
+    ASSERT_EQ(it, apptMapping.end());
+
+    Appointment* testAppointment = new Appointment(apptCode, "", 1729681200, 1729681800, "", "", "");
+    testApptDatabase->saveApptToDatabase(*testAppointment);
+    testApptDatabase->loadContentsFromDatabase(testMyFileDatabase);
+
+    apptMapping = testMyFileDatabase->getAppointmentMapping();
+    it = apptMapping.find(apptCode);
+    ASSERT_NE(it, apptMapping.end());
+}
+
+TEST_F(ApptDatabaseUnitTests, SaveApptAndLoadDbTestSpecialCharacter) {
+    std::string apptCode = "APPT888";
+    std::map<std::string, Appointment> apptMapping = testMyFileDatabase->getAppointmentMapping();
+    auto it = apptMapping.find(apptCode);
+    ASSERT_EQ(it, apptMapping.end());
+
+    Appointment* testAppointment = new Appointment(apptCode, "DB Test Appointment 2", 1729681200, 1729681800, "Doctor's Office", "", "");
+    testApptDatabase->saveApptToDatabase(*testAppointment);
+    testApptDatabase->loadContentsFromDatabase(testMyFileDatabase);
+
+    apptMapping = testMyFileDatabase->getAppointmentMapping();
+    it = apptMapping.find(apptCode);
+    ASSERT_NE(it, apptMapping.end());
+}
+
 TEST_F(ApptDatabaseUnitTests, SaveContentsAndLoadDbTest) {
-    std::string apptCode = "APPT9";
+    std::string apptCode = "APPT999";
     std::map<std::string, Appointment> apptMapping = testMyFileDatabase->getAppointmentMapping();
     auto it = apptMapping.find(apptCode);
     ASSERT_EQ(it, apptMapping.end());
@@ -76,7 +106,7 @@ TEST_F(ApptDatabaseUnitTests, SaveContentsAndLoadDbTest) {
 }
 
 TEST_F(ApptDatabaseUnitTests, DeleteFromDbTest) {
-    std::string apptCode = "APPT6";
+    std::string apptCode = "APPT666";
     testApptDatabase->loadContentsFromDatabase(testMyFileDatabase);
     std::map<std::string, Appointment> apptMapping = testMyFileDatabase->getAppointmentMapping();
     auto it = apptMapping.find(apptCode);

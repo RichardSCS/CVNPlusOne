@@ -83,7 +83,7 @@ CREATE TABLE `appointment` (
 )
 
 ## Integration Tests
-We tested the integration of the service with the MySQL database via the tests in the ApptDatabaseUnitTests class.
+We tested the integration of the service with the MySQL database via the IntegrationTests class, which tests the service endpoints and checks the MySQL database for the expected results.
 
 For the second iteration we have used MySQL.
 

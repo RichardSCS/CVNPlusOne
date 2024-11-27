@@ -101,6 +101,37 @@ void ApptDatabase::wipeDatabase() {
     }
 }
 
+Appointment* ApptDatabase::getAppointmentFromDatabase(const std::string& apptCode) {
+    if (!m_connection || !m_connection->isValid()) {
+        return nullptr;
+    }
+    std::string query = "SELECT id, title, participantId, createdBy, UNIX_TIMESTAMP(start_time) AS start_time, UNIX_TIMESTAMP(end_time) AS end_time, location FROM appointment WHERE id = ?;";
+    Appointment* apptPtr = nullptr;
+    try {
+        sql::PreparedStatement *prep_stmt;
+        prep_stmt = m_connection->prepareStatement(query);
+        prep_stmt->setString(1, apptCode);
+        sql::ResultSet *result = prep_stmt->executeQuery();
+        if (result->next()) {
+            std::string id = result->getString("id");
+            std::string title = result->getString("title");
+            std::string start_time = result->getString("start_time");
+            std::string end_time = result->getString("end_time");
+            std::string location = result->getString("location");
+            std::string createdBy = result->getString("createdBy");
+            std::string participantId = result->getString("participantId");
+            apptPtr = new Appointment(id, title, std::stoi(start_time), std::stoi(end_time), location, participantId, createdBy); 
+        }
+        delete prep_stmt;
+        delete result;
+    } catch (sql::SQLException &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "SQLState: " << e.getSQLState() << std::endl;
+    }
+    return apptPtr;
+}
+
 void ApptDatabase::loadContentsFromDatabase(MyFileDatabase* myFileDatabase) {
     if (!m_connection || !m_connection->isValid()) {
         return;
