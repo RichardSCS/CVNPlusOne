@@ -188,6 +188,9 @@ void RouteController::updateAppointmentParticipantId(const crow::request& req, c
         } else {
             it->second.setParticipantId(apptParticipantId);
             myFileDatabase->setApptMapping(appointmentMapping);
+            if (apptDatabase) {
+                apptDatabase->saveApptToDatabase(it->second);
+            }
             res.code = 200;
             res.write("Appointment participantId successfully updated.");
         }
@@ -214,6 +217,9 @@ void RouteController::updateAppointmentCreatedBy(const crow::request& req, crow:
         } else {
             it->second.setCreatedBy(apptCreatedBy);
             myFileDatabase->setApptMapping(appointmentMapping);
+            if (apptDatabase) {
+                apptDatabase->saveApptToDatabase(it->second);
+            }
             res.code = 200;
             res.write("Appointment createdBy successfully updated.");
         }

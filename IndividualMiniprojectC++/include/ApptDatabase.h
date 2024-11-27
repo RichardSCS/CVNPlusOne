@@ -21,6 +21,7 @@ class ApptDatabase {
         void wipeDatabase();
         void saveContentsToDatabase(const std::map<std::string, Appointment>& mapping);
         int getCodeCount();
+        Appointment* getAppointmentFromDatabase(const std::string& apptCode);
 
     private:
         std::string m_filePath = "";

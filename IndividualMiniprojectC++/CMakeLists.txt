@@ -57,6 +57,7 @@ add_executable(IndividualMiniprojectTests
   test/MyFileDatabaseUnitTests.cpp
   test/ApptDatabaseUnitTests.cpp
   test/MyAppUnitTests.cpp
+  test/IntegrationTests.cpp
 )
 
 target_include_directories(IndividualMiniprojectTests PRIVATE 
@@ -93,6 +94,7 @@ if (CPPLINT)
         test/MyFileDatabaseUnitTests.cpp
         test/ApptDatabaseUnitTests.cpp
         test/MyAppUnitTests.cpp
+        test/IntegrationTests.cpp
     )
 
     # Custom target to run cpplint
@@ -140,6 +142,7 @@ add_executable(CodeCoverage
   test/MyFileDatabaseUnitTests.cpp
   test/ApptDatabaseUnitTests.cpp
   test/MyAppUnitTests.cpp
+  test/IntegrationTests.cpp
 )
 
 target_include_directories(CodeCoverage PRIVATE
