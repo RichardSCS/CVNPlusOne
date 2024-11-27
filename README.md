@@ -68,7 +68,7 @@ This section describes the endpoints that the service provides, as well as their
 #### PATCH /updateApptParticipantId
 * Expected Input Parameters: apptCode apptParticipantId
 * Expected Output: "Appointment participantId successfully updated."
-* Upon Success: HTTP 200 Status Code is returned along with "Appointment participantId successfully updated.s" in the response body.
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment participantId successfully updated" in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found"
 
 #### GET /list
