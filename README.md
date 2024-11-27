@@ -65,6 +65,18 @@ This section describes the endpoints that the service provides, as well as their
 * Upon Success: HTTP 200 Status Code is returned along with "Appointment time successfully updated." in the response body.
 * Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found" or HTTP 400 Status Code is returned along with "Failed to update appointment time." in the response body. 
 
+#### PATCH /updateApptParticipantId
+* Expected Input Parameters: apptCode apptParticipantId
+* Expected Output: "Appointment participantId successfully updated."
+* Upon Success: HTTP 200 Status Code is returned along with "Appointment participantId successfully updated.s" in the response body.
+* Upon Failure: HTTP 404 Status Code is returned along with "Appointment Not Found"
+
+#### GET /list
+* Expected Input Parameters: createdBy(optional) participantId(optional)
+* Expected Output: List of appointment code matching the provided query parameters will be returned
+* Upon Success: HTTP 200 Status Code is returned along with List of appointment code
+* Upon Failure: HTTP 404 Status Code is returned along with "No appointments found."
+
 ## Database
 * For first iteration we have set up testfile.bin. On calling `IndividualMiniproject setup`, db entries will be setup. On subsequent calls to IndividualMiniproject without `setup`, it reads the appointments from the db. On termination it writes the appointments created into the db.
 * For second iteration we have added a framework for connection to a MySQL database. The MySQL database must run on the same server as the main program. 
@@ -143,11 +155,13 @@ Select an option:
 2. Get all appointment codes
 3. Get details for a specific appointment
 4. Get details for all appointments
-5. Update title of an appointment
-6. Update location of an appointment
-7. Update start and end times of an appointment
-8. Delete an appointment
-9. Exit
+5. Get details for all appointments for a patient
+6. Update title of an appointment
+7. Update location of an appointment
+8. Update start and end times of an appointment
+9. Update participant for an appointment
+10. Delete an appointment
+11. Exit
 Enter your choice: 
 
 #### PatientClient
@@ -156,8 +170,7 @@ Select an option:
 1. Get all appointment codes
 2. Get details for a specific appointment
 3. Get details for all appointments
-4. Delete an appointment
-5. Exit
+4. Exit
 
 ## Examples
 ### Create Appointment (Doctor Client only)
@@ -175,7 +188,7 @@ Available Appointment Codes:
 APPT4
 
 ### Update Appointment (Doctor Client only)
-Enter your choice: 5
+Enter your choice: 6
 Enter appointment code: APPT4
 Enter appointment title: Blood test
 http://127.0.0.1:8080/updateApptTitle?apptCode=APPT4&apptTitle=Blood%20test
@@ -183,8 +196,8 @@ Appointment APPT4 updated successfully
 
 Similarly for Update location and Update start and end times.
 
-### Delete Appointment (Both Doctor and Patient Clients)
-Enter your choice: 8(Doctor) OR 4(Patient)
+### Delete Appointment (Doctor Client only)
+Enter your choice: 10
 Enter appointment code: APPT4
 Appointment APPT4 deleted successfully
 
