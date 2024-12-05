@@ -7,7 +7,7 @@
 PatientClient::PatientClient(const std::string& baseUrl) : baseUrl(baseUrl), createdAppointments() {}
 
 std::vector<std::string> PatientClient::getAppointmentCodes(const std::string& participantId) {
-    RestClient::Response response = RestClient::get(baseUrl + "/listAppts?createdBy=" + participantId);
+    RestClient::Response response = RestClient::get(baseUrl + "/listAppts?participantId=" + participantId);
     std::vector<std::string> codes;
 
     if (response.code == 200) {
