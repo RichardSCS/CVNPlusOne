@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
             case 2:
                 std::cout << "Enter appointment code: ";
                 std::cin >> apptCode;
-                client.displayAppointmentDetail(apptCode);
+                client.displayAppointmentDetail(apptCode, participantId);
                 break;
             case 3:
                 client.displayAllAppointmentDetails(participantId);

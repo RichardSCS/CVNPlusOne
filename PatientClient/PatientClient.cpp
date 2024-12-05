@@ -26,14 +26,27 @@ std::vector<std::string> PatientClient::getAppointmentCodes(const std::string& p
     return codes;
 }
 
-std::string PatientClient::getAppointmentDetails(const std::string& code) {
-    RestClient::Response response = RestClient::get(baseUrl + "/retrieveAppt?apptCode=" + code);
-    if (response.code == 200) {
-        return response.body;
-    } else {
-        std::cerr << "Failed to retrieve details for " << code << ". HTTP code: " << response.code << "\n";
+std::string PatientClient::getAppointmentDetails(const std::string& code, const std::string& participantId) {
+    std::vector<std::string> codes = getAppointmentCodes(participantId);
+    if (codes.empty()) {
+        std::cout << "No appointment codes found for this patient\n";
         return "Appointment details not found";
+    } else {
+        for (const auto& c : codes) {
+           if (c == code) {
+               RestClient::Response response = RestClient::get(baseUrl + "/retrieveAppt?apptCode=" + code);
+               if (response.code == 200) {
+                   return response.body;
+               } else {
+                   std::cerr << "Failed to retrieve details for " << code << ". HTTP code: " << response.code << "\n";
+                   return "Appointment details not found";
+               }
+        } else {
+                   return "Appointment details not found";
+        }
+      }
     }
+        return "Appointment details not found";
 }
 
 // Reference https://gist.github.com/arthurafarias/56fec2cd49a32f374c02d1df2b6c350f
@@ -93,12 +106,12 @@ void PatientClient::displayAllAppointmentDetails(const std::string& participantI
     // Get all the appts existed in the DB
     std::vector<std::string> codes = getAppointmentCodes(participantId);
     for (const auto& code : codes) {
-        std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
+        std::cout << "Details for " << code << ": " << getAppointmentDetails(code, participantId) << "\n\n";
     }
 }
 
-void PatientClient::displayAppointmentDetail(const std::string& code) {
-    std::cout << "Details for " << code << ": " << getAppointmentDetails(code) << "\n\n";
+void PatientClient::displayAppointmentDetail(const std::string& code, const std::string& participantId) {
+    std::cout << "Details for " << code << ": " << getAppointmentDetails(code, participantId) << "\n\n";
 }
 
 std::string PatientClient::deleteAppointment(const std::string& code) {
